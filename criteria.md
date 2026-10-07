@@ -15,7 +15,7 @@ data earns credit; *"80% seemed reasonable"* does not.
 > Missing your own targets next unit costs you nothing. Setting a target so
 > easy you can't miss it does.
 
-**Two are written for you. You write three.**
+**Two were written for me. I wrote three.**
 
 ---
 
@@ -24,10 +24,12 @@ data earns credit; *"80% seemed reasonable"* does not.
 Given a query that matches at least one listing, the agent completes all three
 tool calls and returns a fit card — in at least 4 of 5 tries.
 
-**Why this target:**
-<!-- Why 4 of 5 and not 5 of 5? Something about your search, probably —
-     "my search is a plain keyword match and some phrasings will miss" is a
-     real answer. -->
+**Why this target:** Every run makes two model calls, and either one can come back
+slow, rate-limited or malformed, so one bad try out of five can happen even when
+the loop is correct. 5 of 5 would be scoring the model service as much as my code.
+When I check this, a fit card only counts if it is a real caption from the model,
+not the "Can't write a fit card…" fallback that `create_fit_card` returns when the
+outfit text is empty.
 
 ---
 
@@ -36,67 +38,72 @@ tool calls and returns a fit card — in at least 4 of 5 tries.
 Given a query that matches no listings, the agent stops before calling
 `suggest_outfit` and returns a message naming what to change — 5 of 5 tries.
 
-**Why this target:**
-<!-- Why is 5 of 5 reasonable here when criterion 1 isn't? What's different
-     about this path? -->
+**Why this target:** This path makes no model calls. Parsing, search and the
+branch are all plain Python, so the same query gives the same result every time,
+and any miss is a bug in my branch, not noise. When I check this, the message only
+counts if it names a specific change, such as raising the price ceiling, trying a
+different size or using broader keywords. A message that only says "price" or
+"no results" fails.
 
 ---
 
-## 3. Something about state
+## 3. The item search picked is the item `suggest_outfit` receives
 
-<!-- YOU WRITE THIS ONE.
+Across these 5 different matching queries, the `id` that `suggest_outfit` receives
+equals `session["selected_item"]["id"]` in 5 of 5 queries:
 
-     How would you know that the item your search found is the same item the
-     next tool received? Name something countable or observable.
+1. `vintage graphic tee under $30`
+2. `90s track jacket in size M`
+3. `silk slip dress in midi length under $40`
+4. `platform sneakers size 8`
+5. `denim jacket under $50`
 
-     This is the criterion people find hardest, because state failure doesn't
-     look like state failure — it looks like a tool problem. Something that
-     compares session["selected_item"] against what actually reached
-     suggest_outfit is the shape you're after. -->
+The id is logged inside `suggest_outfit`, from its own `new_item` parameter. It is
+never read from the session, so the check can fail. Separately, the outfit text
+contains at least 2 words from the part of the item's title before the "—"
+(case-insensitive) in at least 4 of 5 queries.
 
-
-
-**Why this target:**
-
-
-
----
-
-## 4. Something about the fit card
-
-<!-- YOU WRITE THIS ONE.
-
-     The fit card calls a model, so the same input can produce different words
-     each time. That's not a bug — it's the nature of the tool. So what would
-     make it acceptable?
-
-     Think about what you'd actually be unhappy to see. A caption that never
-     mentions the price? Two different items producing the same opening
-     sentence? A card longer than a caption anyone would post? Any of those can
-     be turned into a number. -->
-
-
-
-**Why this target:**
-
-
+**Why this target:** The id match is plain Python with no model involved, so any
+miss is a bug, and the target is 5 of 5. The title-word check depends on how the
+model phrases things. Requiring the whole title would fail by design, because
+titles like "Graphic Tee — 2003 Tour Bootleg Style" are rarely repeated exactly,
+so I ask for 2 title words in 4 of 5.
 
 ---
 
-## 5. Your choice
+## 4. The fit card is postable and varies
 
-<!-- YOU WRITE THIS ONE TOO.
+Run `create_fit_card` 5 times on `lst_006` with `CACHE_ENABLED` off. In at least
+4 of 5 runs, the caption is 280 characters or fewer, contains at least 2 words
+from the part of the title before the "—", and contains the price and the
+platform. Also, at least 4 of the 5 captions are distinct strings.
 
-     Pick something you actually care about getting right. Speed, the empty
-     wardrobe path, what happens when the model can't be reached, whether the
-     search respects a price ceiling — anything, as long as it names a number
-     or an observable outcome. -->
+**Why this target:** Every part of this can be counted. The prompt controls the
+length, price and platform, so I expect nearly every run to pass, and I allow one
+miss because the model can slip. Requiring 4 distinct captions is a real check
+that the output varies, not just that a setting is on. Fixing the item to
+`lst_006` means a missing brand can't change the result.
 
+---
 
+## 5. Search respects the price ceiling and the size
 
-**Why this target:**
+Run these 5 named queries:
 
+1. `graphic tee size L under $30`
+2. `top size M under $25` (only `S/M` listings qualify)
+3. `bucket hat size M under $20` (a `One Size` listing)
+4. `sneakers size 8 under $50` (`US 8` must match and `US 8.5` must not)
+5. `jacket size S under $45`
 
+Each query must return
+at least 1 listing, and every returned listing must have `price <= max_price` and
+a size that matches under the spec's token rule (`S/M` matches `M`; `One Size`
+matches any size). 5 of 5 queries must pass. An empty result counts as a failure.
+
+**Why this target:** This is deterministic filtering, so any miss is a bug, and I
+allow none. Requiring at least 1 result stops a broken search that returns nothing
+from passing, and naming the queries stops me from picking easy ones.
 
 ---
 
