@@ -104,7 +104,7 @@ def cmd_examples(args):
     )
 
 
-def _ask_one(query, wardrobe, use_trace):
+def _ask_one(query, wardrobe, use_trace, show_session=False):
     from agent import run_agent
     import trace as trace_module
 
@@ -112,6 +112,12 @@ def _ask_one(query, wardrobe, use_trace):
         trace_module.start_trace()
 
     session = run_agent(query, wardrobe)
+
+    if show_session:
+        import json
+        shown = dict(session, wardrobe=f"<{len(session['wardrobe'].get('items', []))} items>")
+        print("\n--- final session ---")
+        print(json.dumps(shown, indent=2, ensure_ascii=False))
 
     print()
     if session["error"]:
@@ -145,7 +151,7 @@ def cmd_ask(args):
 
     try:
         if args.query:
-            _ask_one(args.query, wardrobe, args.trace)
+            _ask_one(args.query, wardrobe, args.trace, args.session)
         else:
             print("Ask for something, or press Enter on an empty line to quit.\n")
             while True:
@@ -156,7 +162,7 @@ def cmd_ask(args):
                     break
                 if not query:
                     break
-                _ask_one(query, wardrobe, args.trace)
+                _ask_one(query, wardrobe, args.trace, args.session)
     finally:
         print(generate.usage())
 
@@ -184,6 +190,7 @@ def build_parser():
     p_ask = sub.add_parser("ask", help="run the agent")
     p_ask.add_argument("query", nargs="?")
     p_ask.add_argument("--trace", action="store_true", help="print the loop step by step")
+    p_ask.add_argument("--session", action="store_true", help="print the final session dict")
     p_ask.add_argument(
         "--empty-wardrobe",
         action="store_true",
