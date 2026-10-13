@@ -1,0 +1,12 @@
+[1] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=10 items
+      out: Outfit One: Throw the Denim Jacket — Light Wash, Cropped over the White ribbed tank top, paired with your Bagg…
+14:27:11 call 1: OK, 610 chars
+[2] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=10 items
+      out: Outfit 1: Denim Jacket — Light Wash, Cropped White ribbed tank top Baggy straight-leg jeans, dark wash Chunky …
+14:27:13 call 2: OK, 598 chars
+[3] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=10 items
+      out: Outfit 1: Denim Jacket — Light Wash, Cropped White ribbed tank top Wide-leg khaki trousers Brown leather belt …
+14:27:14 call 3: OK, 610 chars

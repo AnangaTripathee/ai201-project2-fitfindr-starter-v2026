@@ -423,13 +423,35 @@ Criterion 5, query 2 (`top size M under $25`), try 1: `mcp_server.py::search_lis
 
 | # | Criterion | Target | Verdict | How I decided |
 |---|---|---|---|---|
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
-| 4 |  |  |  |  |
-| 5 |  |  |  |  |
+| 1 | Matching query completes all three tools | ≥4 of 5 | **MET (5/5)** | All 5 tries returned a real model caption (150–204 chars), with no `error` and not the fallback text. |
+| 2 | Impossible query stops before `suggest_outfit` | 5 of 5 | **MET (5/5)** | All 5 tries had 2 trace steps (parse, search), `outfit_suggestion` and `fit_card` were `None`, and the message names three concrete changes. |
+| 3 | `suggest_outfit` receives the selected item and uses its title | id 5 of 5; title words ≥4 of 5 | **MISSED** (id 4/5; words 4/5) | Queries 1–4 passed both parts in all 5 runs. Query 5 (`denim jacket under $50`) failed all 5 runs because `suggest_outfit` never ran, so no id was logged. The id part needs 5/5, so the criterion is missed even though the words part (4/5) meets its own target. |
+| 4 | Fit card on `lst_006` is postable and varies | ≥4 of 5 pass; ≥4 distinct | **MISSED** (3/5; 3 distinct) | Tries 2, 3 and 5 passed every check and are 3 different strings. Tries 1 and 4 produced no caption at all. 3 < 4 on both parts. |
+| 5 | Search respects price ceiling and size | 5 of 5 | **MET (5/5)** | All 5 named queries returned ≥1 listing in all 5 runs, with no listing over the ceiling or with a non-matching size. |
 
 **Diagnoses**
+
+There are two misses, and they are **one problem**. Every failed try in the run (7 of the 65 tries that call the model, which is 70 tries minus the 5 impossible-query tries that never reach the model) failed at the same place for the same reason.
+
+- **Where:** the model's output. More precisely, the model call inside the **`suggest_outfit` tool, step [3]** of the loop: no output came back. The search, the branch and the session all worked. In every failed try, step [2] found the right item (`lst_007` for query 5, `lst_006` for criterion 4) and put it in `selected_item`.
+- **Mechanism:** Gemini answered `503 UNAVAILABLE` ("This model is currently experiencing high demand"). `generate.py::generate` only retries an error if it looks like a rate limit (`"429"`, "resource exhausted", or "rate" + "limit"). A 503 matches none of those, so it is raised as `ModelUnavailable` on the **first attempt, with no retry**. My handler in `agent.py::run_agent` then did what it was built to do: it kept the search result, set `session["error"]` to the "model is busy" message and stopped. So `suggest_outfit` logged no id, there was no outfit text, and `create_fit_card` never ran.
+- **Evidence:** all 7 failed tries end with the same two trace lines, `[3] model unavailable` / `out: service busy`, right after `[2] search_listings (via MCP)` (see the query 5 trace in the Run Log above). The failures were bunched together: all 5 runs of C3 query 5 in a row, then C4 tries 1 and 4. To check that this wasn't something about the denim-jacket prompt, I called `suggest_outfit` on `lst_007` with the same wardrobe 3 more times at 14:27, two minutes after the run. It succeeded 3 of 3 times ([results/diag_lst_007_suggest_outfit.txt](results/diag_lst_007_suggest_outfit.txt)). That diagnostic replaces no tries; the table above is exactly what the run produced. Earlier the same day, before this run, the service returned 503s for well over an hour (test.py failed with 503 at 14:06, and [results/trace_real_503_outage.txt](results/trace_real_503_outage.txt) is one of those runs).
+- **How much the outage distorted the result:** a lot, for C3 and C4. Every try where the model did answer passed:
+  - C3: 20 of 20 such runs had a matching id and ≥2 title words.
+  - C4: 3 of 3 captions passed every check, and all 3 are distinct.
+
+  So the misses say nothing bad about my prompts, my tools or my loop. They say the agent has no tolerance for a transient service error. That is still a real failure a user would see ("couldn't write the outfit and the fit card"), and it counts against the target as written.
+- **No prompt, tool or loop misses** showed up in this run. I didn't find a mechanism other than the 503.
+
+**Arguing the opposite verdict**
+
+- **C1, MET → MISSED?** It's one query, run 5 times, during a period when the service was failing 7 tries out of 65. If the 503 burst had landed on these 5 tries instead of C3 query 5, C1 would have read 0/5. The pass partly reflects luck about when the burst hit. *Doesn't change the call:* the target is about these 5 tries, and they passed. But it shows that the same weakness threatens C1 too.
+- **C2, MET → MISSED?** The path is deterministic, so 5 tries are really 1 test run 5 times, on one query. Also, the "use fewer or broader keywords" tip is added on every empty search, so part of the message is boilerplate. *Doesn't change the call:* the criterion asks for a message naming a specific change, and "raise the price ceiling… try 'under $40'" is specific. **This target was too easy, and it's the one I'd tighten:** 5 different impossible queries, each failing on a different filter (price only, size only, keywords only), with the message required to name the filter that actually emptied the result.
+- **C3, MISSED → MET?** The criterion exists to test the session handoff from search to `suggest_outfit`, and that handoff was correct in 20 of 20 runs where `suggest_outfit` ran. Query 5 failed for a reason outside what the criterion measures. *Doesn't change the call:* the criterion says "in 5 of 5 queries". For query 5, `suggest_outfit` never received anything, so the match was never shown. Calling it MET would mean scoring the tries I wish had happened.
+- **C4, MISSED → MET?** Every caption that exists is perfect: under 280 chars, title words, `$24`, `depop`, and 3 different strings. *Doesn't change the call:* the criterion is about 5 runs, and in 2 of them the user got no fit card. That's 3/5 against a 4/5 target.
+- **C5, MET → MISSED?** It's deterministic like C2, and 3 of the 5 queries return exactly one listing, which is a thin test of the filter. Also, criteria.md's note on query 2 says "(only `S/M` listings qualify)", but plain `M` listings (`lst_020`, `lst_024`, `lst_030`) are also returned, and they match correctly under the token rule. The note is wrong about the data; the rule itself is fine. *Doesn't change the call:* the rule as written passed on every listing. I'm leaving the note in criteria.md unedited, because changing it is not my call to make silently.
+
+None of the five criteria turned out to be unmeasurable, so I'm making **no revisions** to criteria.md.
 
 
 
