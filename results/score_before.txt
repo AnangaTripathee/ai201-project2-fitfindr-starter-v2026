@@ -1,0 +1,58 @@
+C1: ['PASS', 'PASS', 'PASS', 'PASS', 'PASS'] 5/5
+     PASS error=None card_len=194
+     PASS error=None card_len=193
+     PASS error=None card_len=204
+     PASS error=None card_len=169
+     PASS error=None card_len=150
+C2: ['PASS', 'PASS', 'PASS', 'PASS', 'PASS'] 5/5
+     PASS steps=['parse_query', 'search_listings (via MCP)'] specific=True
+     PASS steps=['parse_query', 'search_listings (via MCP)'] specific=True
+     PASS steps=['parse_query', 'search_listings (via MCP)'] specific=True
+     PASS steps=['parse_query', 'search_listings (via MCP)'] specific=True
+     PASS steps=['parse_query', 'search_listings (via MCP)'] specific=True
+C3 (one column per query; a query passes a part only if all 5 of its tries pass):
+   id match : ['PASS', 'PASS', 'PASS', 'PASS', 'FAIL'] 4/5 (target 5/5)
+   2 words  : ['PASS', 'PASS', 'PASS', 'PASS', 'FAIL'] 4/5 (target 4/5)  [try-1-only view: 4/5]
+     c3 q1 vintage graphic tee
+        id PASS words PASS lst_002->lst_002 words=['y2k', 'baby', 'tee'] err=False
+        id PASS words PASS lst_002->lst_002 words=['y2k', 'baby', 'tee'] err=False
+        id PASS words PASS lst_002->lst_002 words=['y2k', 'baby', 'tee'] err=False
+        id PASS words PASS lst_002->lst_002 words=['y2k', 'baby', 'tee'] err=False
+        id PASS words PASS lst_002->lst_002 words=['y2k', 'baby', 'tee'] err=False
+     c3 q2 90s track jacket
+        id PASS words PASS lst_004->lst_004 words=['90s', 'track', 'jacket'] err=False
+        id PASS words PASS lst_004->lst_004 words=['90s', 'track', 'jacket'] err=False
+        id PASS words PASS lst_004->lst_004 words=['90s', 'track', 'jacket'] err=False
+        id PASS words PASS lst_004->lst_004 words=['90s', 'track', 'jacket'] err=False
+        id PASS words PASS lst_004->lst_004 words=['90s', 'track', 'jacket'] err=False
+     c3 q3 silk slip dress
+        id PASS words PASS lst_013->lst_013 words=['90s', 'silk', 'slip', 'dress'] err=False
+        id PASS words PASS lst_013->lst_013 words=['90s', 'silk', 'slip', 'dress'] err=False
+        id PASS words PASS lst_013->lst_013 words=['90s', 'silk', 'slip', 'dress'] err=False
+        id PASS words PASS lst_013->lst_013 words=['90s', 'silk', 'slip', 'dress'] err=False
+        id PASS words PASS lst_013->lst_013 words=['90s', 'silk', 'slip', 'dress'] err=False
+     c3 q4 platform sneakers
+        id PASS words PASS lst_019->lst_019 words=['platform', 'sneakers'] err=False
+        id PASS words PASS lst_019->lst_019 words=['platform', 'sneakers'] err=False
+        id PASS words PASS lst_019->lst_019 words=['platform', 'sneakers'] err=False
+        id PASS words PASS lst_019->lst_019 words=['platform', 'sneakers'] err=False
+        id PASS words PASS lst_019->lst_019 words=['platform', 'sneakers'] err=False
+     c3 q5 denim jacket
+        id FAIL words FAIL lst_007->None words=[] err=True
+        id FAIL words FAIL lst_007->None words=[] err=True
+        id FAIL words FAIL lst_007->None words=[] err=True
+        id FAIL words FAIL lst_007->None words=[] err=True
+        id FAIL words FAIL lst_007->None words=[] err=True
+C4: ['FAIL', 'PASS', 'PASS', 'FAIL', 'PASS'] 3/5 (target 4/5); distinct captions 3/5 (target 4)
+     FAIL len=0 {'is_lst_006': True, 'len<=280': False, '2 title words': False, 'price $24': False, 'platform': False}
+     PASS len=212 {'is_lst_006': True, 'len<=280': True, '2 title words': True, 'price $24': True, 'platform': True}
+     PASS len=191 {'is_lst_006': True, 'len<=280': True, '2 title words': True, 'price $24': True, 'platform': True}
+     FAIL len=0 {'is_lst_006': True, 'len<=280': False, '2 title words': False, 'price $24': False, 'platform': False}
+     PASS len=184 {'is_lst_006': True, 'len<=280': True, '2 title words': True, 'price $24': True, 'platform': True}
+C5 (one column per query):
+    ['PASS', 'PASS', 'PASS', 'PASS', 'PASS'] 5/5 (target 5/5)
+     c5 q1 graphic tee L n=3 bad=[] matches_log=True | all tries pass: True
+     c5 q2 top M n=6 bad=[] matches_log=True | all tries pass: True
+     c5 q3 bucket hat M n=1 bad=[] matches_log=True | all tries pass: True
+     c5 q4 sneakers 8 n=1 bad=[] matches_log=True | all tries pass: True
+     c5 q5 jacket S n=1 bad=[] matches_log=True | all tries pass: True

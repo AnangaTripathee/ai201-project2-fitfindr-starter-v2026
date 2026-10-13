@@ -280,19 +280,125 @@ The real model output from `create_fit_card` is the `fit_card` line in the full 
      `python run_eval.py --label before` runs everything and writes the table
      into results/. Paste it here and fill in the verdicts. -->
 
+Run with `python run_eval.py --label before` on commit `c9ba1b3`, 13 Oct 2026, 14:17–14:25, cache off, temperature 0.9. 70 tries, 123 model calls, 0 crashes. Raw files: [results/run_2026-10-13_1425_before.md](results/run_2026-10-13_1425_before.md) (the report), [results/run_before_console.txt](results/run_before_console.txt) (console) and [results/score_before.txt](results/score_before.txt) (scorer output).
+
 | Criterion | Target | Try 1 | Try 2 | Try 3 | Try 4 | Try 5 | Verdict |
 |---|---|---|---|---|---|---|---|
-| 1.  |  |  |  |  |  |  |  |
-| 2.  |  |  |  |  |  |  |  |
-| 3.  |  |  |  |  |  |  |  |
-| 4.  |  |  |  |  |  |  |  |
-| 5.  |  |  |  |  |  |  |  |
+| 1. Matching query completes all three tools | ≥4 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+| 2. Impossible query stops before `suggest_outfit` | 5 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+| 3. `suggest_outfit` gets the selected item (id 5/5) and uses its title (≥2 words, 4/5) | id 5 of 5; words ≥4 of 5 | PASS | PASS | PASS | PASS | FAIL | MISSED (id 4/5; words 4/5) |
+| 4. Fit card on `lst_006` is postable and varies | ≥4 of 5 pass; ≥4 distinct | FAIL | PASS | PASS | FAIL | PASS | MISSED (3/5; 3 distinct) |
+| 5. Search respects price ceiling and size | 5 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
 
-**Real output from one try**, pasted as text, naming the file and function
-that produced it:
+**How the columns map for criteria 3 and 5.** Both criteria are written over 5 *named queries*, so for those two rows **Try k = named query k** from criteria.md. `run_eval.py` ran each query 5 times, and a query is marked PASS only if **all 5** of its runs passed. That is the strictest reading. All 25 runs per criterion are listed in [results/score_before.txt](results/score_before.txt). For criterion 3, the cell is PASS only if both parts passed for that query.
+
+**How the cells were marked.** [results/score_run.py](results/score_run.py) marks every cell. It reads only the saved run report, and applies each criterion as it is written in criteria.md:
+
+- C1: a fit card exists, there's no `error`, and the card isn't the "Can't write a fit card…" fallback.
+- C2: `error` names a specific change, `outfit_suggestion` and `fit_card` are `None`, and the trace has no `suggest_outfit` step.
+- C3: the `new_item.id` that `suggest_outfit` logs from inside the tool equals the `selected_item` id in the search step, and the outfit text contains ≥2 whole words from the part of the title before the "—".
+- C4: the card is ≤280 chars, has ≥2 title words, `$24` and `depop`, and the 5 cards are counted for distinct strings.
+- C5: ≥1 result, and every listing has `price <= max_price` and a matching size token.
+
+For C5 the report logs only the result count and the first 3 titles, so the scorer re-calls the MCP tool with the exact inputs from the trace and checks that the count and titles match the log before checking each listing. Run it with `python results/score_run.py results/run_<stamp>_before.md`.
+
+**Real output, one try per criterion.** All of it is from `results/run_2026-10-13_1425_before.md`, written by `run_eval.py::write_report`. The loop is `agent.py::run_agent`, the `[n]` trace lines come from `trace.py::step`, and the tools are in `tools.py`, with search reached through `mcp_server.py::search_listings`.
+
+Criterion 1, try 1 (`vintage graphic tee under $30`): `tools.py::create_fit_card` produced the fit card.
 
 ```
+- stopped early: no
+- selected_item: Y2K Baby Tee — Butterfly Print ($18.0, depop)
+- search_results: 10
 
+Fit card:
+Scored this butterfly Y2K Baby Tee for just $18 and I’m obsessed! It’s giving skater-girl casual with baggy denim, then grunge-chic with khaki trousers. Heading to depop to list more finds soon!
+
+Trace:
+[1] parse_query
+      in:  vintage graphic tee under $30
+      out: description='vintage graphic tee', size=None, max_price=30.0
+[2] search_listings (via MCP)
+      in:  description='vintage graphic tee', size=None, max_price=30.0
+      out: 10 items: Y2K Baby Tee — Butterfly Print, Vintage Band Tee — Faded Grey, Graphic Tee — 2003 Tour Bootleg Style … +7 more
+      →    branch: not empty, selected_item = lst_002
+[3] suggest_outfit
+      in:  new_item.id=lst_002 (Y2K Baby Tee — Butterfly Print), wardrobe=10 items
+      out: Outfit 1: - Y2K Baby Tee — Butterfly Print - Baggy straight-leg jeans, dark wash - Chunky white sneakers - Bla…
+[4] create_fit_card
+      in:  outfit (718 chars), new_item.id=lst_002
+      out: Scored this butterfly Y2K Baby Tee for just $18 and I’m obsessed! It’s giving skater-girl casual with baggy de…
+```
+
+Criterion 2, try 1 (`designer ballgown size XXS under $5`): `agent.py::_no_results_message` wrote the message, and `agent.py::run_agent` stopped at the branch.
+
+```
+- stopped early: yes — No listings matched 'designer ballgown' in size XXS under $5. You could: raise the price ceiling (listings run $12–$75; try 'under $40' instead of 'under $5'); try a different size or leave the size out (sizes in stock include S, M, L, XL, US 7–9 and W27–W32); use fewer or broader keywords, like 'dress' or 'jacket' instead of a specific style.
+- selected_item: (none)
+- search_results: 0
+
+Trace:
+[1] parse_query
+      in:  designer ballgown size XXS under $5
+      out: description='designer ballgown', size='XXS', max_price=5.0
+[2] search_listings (via MCP)
+      in:  description='designer ballgown', size='XXS', max_price=5.0
+      out: [] (empty)
+      →    branch: empty, stopping before suggest_outfit
+```
+
+Criterion 3, query 1, try 1: the id in step [3] is logged by `tools.py::_trace_outfit` from `suggest_outfit`'s own `new_item`, and step [2]'s `selected_item` comes from the session.
+
+```
+[2] search_listings (via MCP)
+      in:  description='vintage graphic tee', size=None, max_price=30.0
+      out: 10 items: Y2K Baby Tee — Butterfly Print, Vintage Band Tee — Faded Grey, Graphic Tee — 2003 Tour Bootleg Style … +7 more
+      →    branch: not empty, selected_item = lst_002
+[3] suggest_outfit
+      in:  new_item.id=lst_002 (Y2K Baby Tee — Butterfly Print), wardrobe=10 items
+      out: Outfit 1: - Y2K Baby Tee — Butterfly Print - Baggy straight-leg jeans, dark wash - Vintage black denim jacket …
+
+scorer: id PASS words PASS lst_002->lst_002 words=['y2k', 'baby', 'tee']
+```
+
+Criterion 3, query 5 (`denim jacket under $50`), try 1: this is the failing cell. All 5 runs of this query looked like this.
+
+```
+- stopped early: yes — Found Denim Jacket — Light Wash, Cropped ($42 on poshmark), but couldn't write the outfit and the fit card: the model is busy or couldn't be reached right now. Try the same query again in a minute or two.
+- selected_item: Denim Jacket — Light Wash, Cropped ($42.0, poshmark)
+- search_results: 7
+
+Trace:
+[1] parse_query
+      in:  denim jacket under $50
+      out: description='denim jacket', size=None, max_price=50.0
+[2] search_listings (via MCP)
+      in:  description='denim jacket', size=None, max_price=50.0
+      out: 7 items: Denim Jacket — Light Wash, Cropped, High-Waisted Denim Shorts — Cutoff, Denim Vest — Medium Wash, Studded … +4 more
+      →    branch: not empty, selected_item = lst_007
+[3] model unavailable
+      out: service busy
+      →    stopping; search result kept in session
+```
+
+Criterion 4: the three captions `tools.py::create_fit_card` actually produced for `lst_006` (tries 2, 3 and 5). Tries 1 and 4 stopped like the denim-jacket run above (`[3] model unavailable / out: service busy`), so they have no caption.
+
+```
+try 2 (212 chars): Scored this vintage 2003 tour Graphic Tee on depop for just $24! I'm styling it two ways: tucked into baggy dark denim for an effortless streetwear vibe, or loose over khakis with chunky sneaks for edgy contrast.
+try 3 (191 chars): Scored this sick 2003 tour bootleg Graphic Tee for just $24 on depop! Giving major 90s grunge with baggy denim or cool high-low contrast with tailored khakis. Grab it before I change my mind!
+try 5 (184 chars): Just scored this 2003 tour bootleg Graphic Tee on depop for $24! Obsessed with the heavy grunge vibe, whether I'm stomping around in combat boots or keeping it chill in khaki trousers.
+```
+
+Criterion 5, query 2 (`top size M under $25`), try 1: `mcp_server.py::search_listings` returned the results, which wrap `tools.py::search_listings`. Scorer line: `n=6 bad=[] matches_log=True` (6 listings, all ≤ $25, sizes `S/M` or `M`).
+
+```
+[1] parse_query
+      in:  top size M under $25
+      out: description='top', size='M', max_price=25.0
+[2] search_listings (via MCP)
+      in:  description='top', size='M', max_price=25.0
+      out: 6 items: Mesh Long-Sleeve Top — Black, Crochet Halter Top — Cream, Henley Long Sleeve — Washed Burgundy … +3 more
+      →    branch: not empty, selected_item = lst_017
 ```
 
 ---
