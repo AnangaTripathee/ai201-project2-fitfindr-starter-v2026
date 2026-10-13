@@ -1,0 +1,14 @@
+[1] parse_query
+      in:  90s track jacket in size M
+      out: description='90s track jacket', size='M', max_price=None
+[2] search_listings (via MCP)
+      in:  description='90s track jacket', size='M', max_price=None
+      out: 5 items: 90s Track Jacket — Navy/White Stripe, 90s Leather Bomber — Black, Bucket Hat — Reversible, Brown Plaid … +2 more
+      →    branch: not empty, selected_item = lst_004
+[3] model unavailable
+      out: Couldn't reach the model: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experie…
+      →    stopping; search result kept in session
+
+  Found 90s Track Jacket — Navy/White Stripe ($45 on poshmark), but couldn't write the outfit and the fit card because the model is unavailable: Couldn't reach the model: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}} Your search still worked. Try the same query again in a minute; if the message says your API key was rejected, fix GEMINI_API_KEY in .env first.
+
+1 model calls this session

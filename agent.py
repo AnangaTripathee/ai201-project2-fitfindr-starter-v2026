@@ -116,6 +116,7 @@ def run_agent(query: str, wardrobe: dict) -> dict:
     steps += 1
     trace.check_iterations(steps)
     session["parsed"] = parse_query(query)
+    trace.step("parse_query", inputs=query, returned=_fmt_parsed(session["parsed"]))
 
     # Step 2: search over MCP, reading the parsed values back out of the session.
     steps += 1
@@ -133,24 +134,60 @@ def run_agent(query: str, wardrobe: dict) -> dict:
     # THE BRANCH: nothing found means stop here, before any model call.
     if not session["search_results"]:
         session["error"] = _no_results_message(session["parsed"])
+        trace.step("search_listings (via MCP)", inputs=_fmt_parsed(parsed),
+                   returned=session["search_results"],
+                   note="branch: empty, stopping before suggest_outfit")
         return session
 
     session["selected_item"] = session["search_results"][0]
+    trace.step("search_listings (via MCP)", inputs=_fmt_parsed(parsed),
+               returned=session["search_results"],
+               note=f"branch: not empty, selected_item = {session['selected_item']['id']}")
 
-    # Step 3: outfit, from what's in the session — not from a local variable.
-    steps += 1
-    trace.check_iterations(steps)
-    session["outfit_suggestion"] = suggest_outfit(
-        session["selected_item"], session["wardrobe"]
-    )
+    # Steps 3 and 4 call the model. If it can't be reached (bad key, outage),
+    # keep what we already have and say what broke instead of crashing.
+    # suggest_outfit traces itself, so the id it logs is its own new_item's.
+    try:
+        # Step 3: outfit, from what's in the session — not from a local variable.
+        steps += 1
+        trace.check_iterations(steps)
+        session["outfit_suggestion"] = suggest_outfit(
+            session["selected_item"], session["wardrobe"]
+        )
 
-    # Step 4: fit card, again read back from the session.
-    steps += 1
-    trace.check_iterations(steps)
-    session["fit_card"] = create_fit_card(
-        session["outfit_suggestion"], session["selected_item"]
-    )
+        # Step 4: fit card, again read back from the session.
+        steps += 1
+        trace.check_iterations(steps)
+        session["fit_card"] = create_fit_card(
+            session["outfit_suggestion"], session["selected_item"]
+        )
+        trace.step("create_fit_card",
+                   inputs=f"outfit ({len(session['outfit_suggestion'])} chars), "
+                          f"new_item.id={session['selected_item']['id']}",
+                   returned=session["fit_card"])
+    except ModelUnavailable as exc:
+        session["error"] = _model_unavailable_message(session, exc)
+        trace.step("model unavailable", returned=str(exc),
+                   note="stopping; search result kept in session")
     return session
+
+
+def _fmt_parsed(parsed: dict) -> str:
+    """The parsed query as one line, so the trace shows values and not just keys."""
+    return (f"description={parsed['description']!r}, size={parsed['size']!r}, "
+            f"max_price={parsed['max_price']!r}")
+
+
+def _model_unavailable_message(session: dict, exc: Exception) -> str:
+    """Say what worked, what broke, and what to do next."""
+    item = session["selected_item"]
+    missing = "the fit card" if session["outfit_suggestion"] else "the outfit and the fit card"
+    return (
+        f"Found {item['title']} (${item['price']:.0f} on {item['platform']}), but couldn't "
+        f"write {missing} because the model is unavailable: {exc} "
+        f"Your search still worked. Try the same query again in a minute; if the "
+        f"message says your API key was rejected, fix GEMINI_API_KEY in .env first."
+    )
 
 
 # Set FITFINDR_DEBUG=1 to print the value the branch checks.

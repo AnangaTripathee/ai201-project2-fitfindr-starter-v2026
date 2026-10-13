@@ -1,0 +1,11 @@
+[1] parse_query
+      in:  designer ballgown size XXS under $5
+      out: description='designer ballgown', size='XXS', max_price=5.0
+[2] search_listings (via MCP)
+      in:  description='designer ballgown', size='XXS', max_price=5.0
+      out: [] (empty)
+      →    branch: empty, stopping before suggest_outfit
+
+  No listings matched 'designer ballgown' in size XXS under $5. You could: raise the price ceiling (listings run $12–$75; try 'under $40' instead of 'under $5'); try a different size or leave the size out (sizes in stock include S, M, L, XL, US 7–9 and W27–W32); use fewer or broader keywords, like 'dress' or 'jacket' instead of a specific style.
+
+0 model calls this session

@@ -23,6 +23,7 @@ the description has to say what is *in* the list.
 import re
 
 import config
+import trace
 from generate import generate
 from utils.data_loader import load_listings
 
@@ -175,7 +176,9 @@ def suggest_outfit(new_item: dict, wardrobe: dict | list) -> str:
             "headings, under 120 words."
         )
         advice = generate(prompt, system=_STYLIST)
-        return f"No wardrobe saved yet — general styling ideas:\n{advice or _FALLBACK_ADVICE}"
+        result = f"No wardrobe saved yet — general styling ideas:\n{advice or _FALLBACK_ADVICE}"
+        _trace_outfit(new_item, items, result)
+        return result
 
     wardrobe_text = "\n".join(
         f"- {w['name']} ({w['category']}; colors: {', '.join(w['colors'])}; "
@@ -193,7 +196,16 @@ def suggest_outfit(new_item: dict, wardrobe: dict | list) -> str:
         "add one line on why it works. Plain text, no markdown headings, under "
         "150 words."
     )
-    return generate(prompt, system=_STYLIST) or _FALLBACK_ADVICE
+    result = generate(prompt, system=_STYLIST) or _FALLBACK_ADVICE
+    _trace_outfit(new_item, items, result)
+    return result
+
+
+def _trace_outfit(new_item: dict, items: list, result: str) -> None:
+    """Logged from inside the tool, from its own new_item, so criterion 3 can compare ids."""
+    trace.step("suggest_outfit",
+               inputs=f"new_item.id={new_item['id']} ({new_item['title']}), wardrobe={len(items)} items",
+               returned=result)
 
 
 _STYLIST = "You are a friendly thrift-store stylist. Be specific and practical."
