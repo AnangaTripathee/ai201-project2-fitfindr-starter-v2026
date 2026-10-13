@@ -1,0 +1,37 @@
+[1] parse_query
+      in:  90s track jacket in size M
+      out: description='90s track jacket', size='M', max_price=None
+[2] search_listings (via MCP)
+      in:  description='90s track jacket', size='M', max_price=None
+      out: 5 items: 90s Track Jacket — Navy/White Stripe, 90s Leather Bomber — Black, Bucket Hat — Reversible, Brown Plaid … +2 more
+      →    branch: not empty, selected_item = lst_004
+[3] suggest_outfit
+      in:  new_item.id=lst_004 (90s Track Jacket — Navy/White Stripe), wardrobe=10 items
+      out: Outfit One White ribbed tank top Baggy straight-leg jeans, dark wash Brown leather belt Chunky white sneakers …
+[4] create_fit_card
+      in:  outfit (585 chars), new_item.id=lst_004
+      out: Scored this vintage Champion 90s Track Jacket for just $45 on poshmark! I'm styling it two ways: balanced with…
+
+  Found:    90s Track Jacket — Navy/White Stripe — $45.0 on poshmark
+
+  Outfit:   Outfit One
+White ribbed tank top
+Baggy straight-leg jeans, dark wash
+Brown leather belt
+Chunky white sneakers
+90s Track Jacket — Navy/White Stripe
+
+This look leans hard into effortless 90s streetwear, where the fitted tank balances the baggy denim while the sporty jacket ties the whole casual vibe together.
+
+Outfit Two
+Wide-leg khaki trousers
+White ribbed tank top
+Chunky white sneakers
+Black crossbody bag
+90s Track Jacket — Navy/White Stripe
+
+Throwing the track jacket over these earthy trousers creates an easy high-low mix of athletic and minimal styles that feels totally fresh.
+
+  Fit card: Scored this vintage Champion 90s Track Jacket for just $45 on poshmark! I'm styling it two ways: balanced with baggy denim and a tank, or dressed up with khaki trousers for the ultimate effortless streetwear vibe.
+
+2 model calls this session, 713 prompt + 179 output tokens
