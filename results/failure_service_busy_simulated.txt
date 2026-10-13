@@ -1,0 +1,14 @@
+[1] parse_query
+      in:  cropped cardigan size S under $35
+      out: description='cropped cardigan', size='S', max_price=35.0
+[2] search_listings (via MCP)
+      in:  description='cropped cardigan', size='S', max_price=35.0
+      out: 1 items: Knit Cardigan — Chunky Brown
+      →    branch: not empty, selected_item = lst_008
+[3] model unavailable
+      out: service busy
+      →    stopping; search result kept in session
+
+  Found Knit Cardigan — Chunky Brown ($35 on depop), but couldn't write the outfit and the fit card: the model is busy or couldn't be reached right now. Try the same query again in a minute or two.
+
+0 model calls this session

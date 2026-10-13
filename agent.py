@@ -166,8 +166,9 @@ def run_agent(query: str, wardrobe: dict) -> dict:
                           f"new_item.id={session['selected_item']['id']}",
                    returned=session["fit_card"])
     except ModelUnavailable as exc:
-        session["error"] = _model_unavailable_message(session, exc)
-        trace.step("model unavailable", returned=str(exc),
+        kind = _unavailable_kind(exc)
+        session["error"] = _model_unavailable_message(session, kind)
+        trace.step("model unavailable", returned=kind,
                    note="stopping; search result kept in session")
     return session
 
@@ -178,15 +179,28 @@ def _fmt_parsed(parsed: dict) -> str:
             f"max_price={parsed['max_price']!r}")
 
 
-def _model_unavailable_message(session: dict, exc: Exception) -> str:
-    """Say what worked, what broke, and what to do next."""
+def _unavailable_kind(exc: Exception) -> str:
+    """'key rejected' or 'service busy'. A retry fixes the second, never the first."""
+    text = str(exc).lower()
+    if any(k in text for k in ("api key", "api_key", "401", "403", "permission", "unauthenticated")):
+        return "key rejected"
+    return "service busy"
+
+
+def _model_unavailable_message(session: dict, kind: str) -> str:
+    """Say what worked, what broke, and what to do next — without the raw error."""
     item = session["selected_item"]
+    found = f"Found {item['title']} (${item['price']:.0f} on {item['platform']})"
     missing = "the fit card" if session["outfit_suggestion"] else "the outfit and the fit card"
+    if kind == "key rejected":
+        return (
+            f"{found}, but couldn't write {missing}: the model rejected your API key. "
+            f"Check GEMINI_API_KEY in your .env file (or create a new key at "
+            f"aistudio.google.com). Retrying won't help until the key is fixed."
+        )
     return (
-        f"Found {item['title']} (${item['price']:.0f} on {item['platform']}), but couldn't "
-        f"write {missing} because the model is unavailable: {exc} "
-        f"Your search still worked. Try the same query again in a minute; if the "
-        f"message says your API key was rejected, fix GEMINI_API_KEY in .env first."
+        f"{found}, but couldn't write {missing}: the model is busy or couldn't be "
+        f"reached right now. Try the same query again in a minute or two."
     )
 
 

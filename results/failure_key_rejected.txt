@@ -1,0 +1,14 @@
+[1] parse_query
+      in:  leather bomber jacket under $80
+      out: description='leather bomber jacket', size=None, max_price=80.0
+[2] search_listings (via MCP)
+      in:  description='leather bomber jacket', size=None, max_price=80.0
+      out: 7 items: 90s Leather Bomber — Black, Leather Belt — Brown, Braided, Mini Shoulder Bag — Tan Leather … +4 more
+      →    branch: not empty, selected_item = lst_022
+[3] model unavailable
+      out: key rejected
+      →    stopping; search result kept in session
+
+  Found 90s Leather Bomber — Black ($75 on depop), but couldn't write the outfit and the fit card: the model rejected your API key. Check GEMINI_API_KEY in your .env file (or create a new key at aistudio.google.com). Retrying won't help until the key is fixed.
+
+1 model calls this session
