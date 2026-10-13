@@ -21,18 +21,22 @@
 ---
 
 <!-- ─────────────────────────────────────────────────────────────────────────
-     HOW TO USE THIS FILE
+     ## How I Used AI
 
-     This is your submission. Fill each section in as you finish the milestone
-     it belongs to — don't leave it all to the end.
+**Tool used:** Claude Code, working inside my FitFindr repo, plus Claude in chat for planning and for talking through decisions.
 
-     Unit 3 asks for the first five sections. Unit 4 adds the five below them.
-     Leave the unit 4 sections alone until then; they're here so you know
-     what's coming.
+**What the AI did in this unit:** Claude Code wrote the code changes and ran the tests, including moving `search_listings` onto MCP, adding the model-unavailable handler and the `trace.step()` calls, adding scenarios to `scenarios.py`, running `run_eval.py` for the before and after runs, and drafting the first versions of the run logs and diagnoses. I wrote the task prompt, which restated the unit's rules (honest results, no loosening criteria, only the allowed code changes).
 
-     Everything is pasted as TEXT. No screenshots, no images, no video links.
-     A typed block of output gets full credit; a picture of the same output
-     gets none.
+**Decisions I made myself:**
+- Scoring criteria 3 and 5 strictly: each Try column is one query, and it passes only if all 5 of its runs pass.
+- Committing the scoring script under `results/` so the verdicts can be reproduced, and describing it in the README as evaluation tooling.
+- Discarding the first "before" run. About 34 of ~59 model-calling tries failed on Gemini 503s, so it measured the outage and not the agent. I did not report its results.
+- Choosing the improvement: [say which one and why, in your own words].
+
+**What I checked myself:**
+- [Only list what you really did. For example: compared the README verdict counts with `results/score_before.txt` and `results/score_after.txt`; read the trace lines for the failed tries to confirm the 503 cause; confirmed `.env` was restored and is git-ignored; confirmed `criteria.md` originals are unchanged.]
+
+**What I'd do differently / where the AI was wrong or limited:** [One or two real observations, such as the first handler message showing a raw error dict and mixing retry advice with the bad-key advice, which I had changed.]
      ───────────────────────────────────────────────────────────────────────── -->
 
 <!-- ═══════════════════════ UNIT 3 — THE BUILD ═══════════════════════ -->
