@@ -15,6 +15,7 @@ Build and test your three tools in `tools.py` first. Then come here.
 
 import os
 import re
+import time
 
 import config
 import trace
@@ -147,30 +148,47 @@ def run_agent(query: str, wardrobe: dict) -> dict:
     # Steps 3 and 4 call the model. If it can't be reached (bad key, outage),
     # keep what we already have and say what broke instead of crashing.
     # suggest_outfit traces itself, so the id it logs is its own new_item's.
-    try:
-        # Step 3: outfit, from what's in the session — not from a local variable.
-        steps += 1
-        trace.check_iterations(steps)
-        session["outfit_suggestion"] = suggest_outfit(
-            session["selected_item"], session["wardrobe"]
-        )
+    #
+    # SECOND BRANCH: a busy service (503) is usually gone in seconds, so wait
+    # and retry once, redoing only the step that hadn't finished. A rejected
+    # key never gets better by waiting, so it stops straight away.
+    for attempt in (1, 2):
+        try:
+            # Step 3: outfit, from what's in the session — not from a local variable.
+            if session["outfit_suggestion"] is None:
+                steps += 1
+                trace.check_iterations(steps)
+                session["outfit_suggestion"] = suggest_outfit(
+                    session["selected_item"], session["wardrobe"]
+                )
 
-        # Step 4: fit card, again read back from the session.
-        steps += 1
-        trace.check_iterations(steps)
-        session["fit_card"] = create_fit_card(
-            session["outfit_suggestion"], session["selected_item"]
-        )
-        trace.step("create_fit_card",
-                   inputs=f"outfit ({len(session['outfit_suggestion'])} chars), "
-                          f"new_item.id={session['selected_item']['id']}",
-                   returned=session["fit_card"])
-    except ModelUnavailable as exc:
-        kind = _unavailable_kind(exc)
-        session["error"] = _model_unavailable_message(session, kind)
-        trace.step("model unavailable", returned=kind,
-                   note="stopping; search result kept in session")
+            # Step 4: fit card, again read back from the session.
+            steps += 1
+            trace.check_iterations(steps)
+            session["fit_card"] = create_fit_card(
+                session["outfit_suggestion"], session["selected_item"]
+            )
+            trace.step("create_fit_card",
+                       inputs=f"outfit ({len(session['outfit_suggestion'])} chars), "
+                              f"new_item.id={session['selected_item']['id']}",
+                       returned=session["fit_card"])
+            break
+        except ModelUnavailable as exc:
+            kind = _unavailable_kind(exc)
+            if kind == "service busy" and attempt == 1:
+                trace.step("model unavailable", returned=kind,
+                           note=f"branch: busy, waiting {BUSY_RETRY_WAIT}s and retrying once")
+                time.sleep(BUSY_RETRY_WAIT)
+                continue
+            session["error"] = _model_unavailable_message(session, kind)
+            trace.step("model unavailable", returned=kind,
+                       note="stopping; search result kept in session")
+            break
     return session
+
+
+# How long the busy branch waits before its one retry.
+BUSY_RETRY_WAIT = 20
 
 
 def _fmt_parsed(parsed: dict) -> str:
