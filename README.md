@@ -262,6 +262,23 @@ The real model output from `create_fit_card` is the `fit_card` line in the full 
 - *What came back:* Followed literally, that rule turns `dress` into `dres`. It still matched (both sides are stemmed the same way), but only by accident, and it would also mangle words like `glass` or `class`.
 - *What I changed:* I changed the spec and the code so words ending in `ss` (and words of 3 letters or fewer) keep their `s`. The README now says `tees` matches `tee` but `dress` stays `dress`.
 
+**Unit 4: who did what**
+
+In this unit Claude Code (Claude Opus 5.5, in VS Code) did the implementation and all the test runs: the MCP registration and rewire, the failure handler and the `trace.step()` calls, the scenarios, the scorer (`results/score_run.py`), both eval runs, and the first draft of every unit 4 README section. I set the ground rules up front: honesty over looking good, no edits to criteria.md, only the three allowed kinds of code change, and stop and ask before anything graded. I made these decisions myself when it asked:
+
+- For criteria 3 and 5, each Try column is one named query, and a query passes only if all 5 of its runs pass (the stricter of the two options it offered).
+- The scorer is committed as evaluation tooling.
+- The first "before" run was discarded rather than reported. It ran from about 11:01 to 13:59 with 34 of its roughly 59 model-calling tries hitting 503s, and it used the old error messages. The "before" eval was re-run from scratch once `test.py` passed again.
+- The 503 handler message was split into "key rejected" and "service busy".
+- The one improvement is the retry branch in `run_agent`, not a retry inside `generate.py`.
+
+Two things Claude Code caught that I would want a reviewer to know about:
+
+- Its own first version of the retry branch was missing a `break`, so a rejected key would still have been retried once. A stubbed test of five cases found that before the after-run.
+- It checked that the denim-jacket failures were not caused by the prompt, by re-calling `suggest_outfit` on that item 3 times after the run (all succeeded).
+
+*To fill in before submitting:* what I personally re-checked, for example the verdict counts against `results/score_before.txt` and `results/score_after.txt`, and whether the diagnoses make sense to me.
+
 <!-- ═══════════════════════ UNIT 4 — THE TEST ═══════════════════════
 
      Don't fill these in during unit 3.
@@ -469,22 +486,158 @@ None of the five criteria turned out to be unmeasurable, so I'm making **no revi
      the same length, your branch isn't working — and this is the fastest way
      anyone will ever find that out. -->
 
-**Happy path**
+Both runs used `python app.py ask '...' --trace`, saved as [results/trace_happy_path.txt](results/trace_happy_path.txt) and [results/trace_empty_search.txt](results/trace_empty_search.txt) and captured on commit `deb188b`. Step [2] is the MCP call. Steps [1], [2] and the `create_fit_card` step are `trace.step()` calls in `agent.py::run_agent`. Step [3] is recorded inside `tools.py::suggest_outfit` (see "Why suggest_outfit's trace line lives in tools.py" below). Since then, the improvement added one more possible step, `model unavailable / branch: busy, waiting 20s and retrying once`, which only appears when the model returns a 503.
+
+**Happy path** (4 steps)
 
 ```
+$ python app.py ask '90s track jacket in size M' --trace
+[1] parse_query
+      in:  90s track jacket in size M
+      out: description='90s track jacket', size='M', max_price=None
+[2] search_listings (via MCP)
+      in:  description='90s track jacket', size='M', max_price=None
+      out: 5 items: 90s Track Jacket — Navy/White Stripe, 90s Leather Bomber — Black, Bucket Hat — Reversible, Brown Plaid … +2 more
+      →    branch: not empty, selected_item = lst_004
+[3] suggest_outfit
+      in:  new_item.id=lst_004 (90s Track Jacket — Navy/White Stripe), wardrobe=10 items
+      out: Outfit One White ribbed tank top Baggy straight-leg jeans, dark wash Brown leather belt Chunky white sneakers …
+[4] create_fit_card
+      in:  outfit (585 chars), new_item.id=lst_004
+      out: Scored this vintage Champion 90s Track Jacket for just $45 on poshmark! I'm styling it two ways: balanced with…
 
+  Found:    90s Track Jacket — Navy/White Stripe — $45.0 on poshmark
+
+  Outfit:   Outfit One
+White ribbed tank top
+Baggy straight-leg jeans, dark wash
+Brown leather belt
+Chunky white sneakers
+90s Track Jacket — Navy/White Stripe
+
+This look leans hard into effortless 90s streetwear, where the fitted tank balances the baggy denim while the sporty jacket ties the whole casual vibe together.
+
+Outfit Two
+Wide-leg khaki trousers
+White ribbed tank top
+Chunky white sneakers
+Black crossbody bag
+90s Track Jacket — Navy/White Stripe
+
+Throwing the track jacket over these earthy trousers creates an easy high-low mix of athletic and minimal styles that feels totally fresh.
+
+  Fit card: Scored this vintage Champion 90s Track Jacket for just $45 on poshmark! I'm styling it two ways: balanced with baggy denim and a tank, or dressed up with khaki trousers for the ultimate effortless streetwear vibe.
+
+2 model calls this session, 713 prompt + 179 output tokens
 ```
 
-**Empty search**
+**Empty search** (2 steps: it stops at the branch, before any model call)
 
 ```
+$ python app.py ask 'designer ballgown size XXS under $5' --trace
+[1] parse_query
+      in:  designer ballgown size XXS under $5
+      out: description='designer ballgown', size='XXS', max_price=5.0
+[2] search_listings (via MCP)
+      in:  description='designer ballgown', size='XXS', max_price=5.0
+      out: [] (empty)
+      →    branch: empty, stopping before suggest_outfit
 
+  No listings matched 'designer ballgown' in size XXS under $5. You could: raise the price ceiling (listings run $12–$75; try 'under $40' instead of 'under $5'); try a different size or leave the size out (sizes in stock include S, M, L, XL, US 7–9 and W27–W32); use fewer or broader keywords, like 'dress' or 'jacket' instead of a specific style.
+
+0 model calls this session
 ```
 
-**On the MCP move:** <!-- what changed in your code, and whether anything
-behaved differently afterwards. If the rewire didn't work, say exactly where it
-broke — the error text and the last thing that worked. That earns the point in
-full. -->
+**On the MCP move:** `search_listings` is registered in `mcp_server.py` with `@mcp.tool()`. Its inputs are `description: str`, `size: str | None = None` and `max_price: float | None = None`, which match the Tool Inventory, so neither side needed fixing. Its description says what it searches, the units (US dollars, inclusive), the size rule, the fields it returns, and that it returns `[]` when nothing matches. `python mcp_client.py` lists it with `description: string`, `size: string (optional)` and `max_price: number (optional)`. In `agent.py::run_agent`, the direct `search_listings(...)` call became `call_tool("search_listings", {...})`. `suggest_outfit` and `create_fit_card` are still called directly.
+
+**Did anything behave differently?** Not in what comes back. I compared the direct call and the MCP call on 5 queries: `vintage graphic tee` ≤ $30, `track jacket 90s` size M, the impossible `designer ballgown` XXS ≤ $5, `sneakers` size 8 ≤ $50, and an empty description. All 5 returned equal lists, including the empty `[]`, and the field types survived the round trip (`price` stayed a `float`, `brand` stayed `None`, `style_tags` stayed a list). The one difference is speed: about **1 ms direct vs about 2.3 s over MCP** (1.2 ms vs 2344 ms, measured once), because `mcp_client.call_tool` starts a fresh server process for every call.
+
+**Why suggest_outfit's trace line lives in tools.py:** criterion 3 says the id must be logged *inside* `suggest_outfit`, from its own `new_item` parameter, and never read from the session, so that the check can actually fail. A trace line in `run_agent` would read `session["selected_item"]`, the same value it's compared against, so it could never disagree. `tools.py::_trace_outfit` therefore logs `new_item['id']` from inside the tool. That is the `[3] suggest_outfit … new_item.id=…` line.
+
+### Failure modes, triggered on purpose
+
+**1. Empty search.** I ran a query the data can't contain, before any handler was added. The branch already handled it: no crash and no model call, and it named what to change.
+
+```
+$ python app.py ask 'gold sequin tuxedo size XXS under $3'
+
+  No listings matched 'gold sequin tuxedo' in size XXS under $3. You could: raise the price ceiling (listings run $12–$75; try 'under $40' instead of 'under $3'); try a different size or leave the size out (sizes in stock include S, M, L, XL, US 7–9 and W27–W32); use fewer or broader keywords, like 'dress' or 'jacket' instead of a specific style.
+
+0 model calls this session
+```
+
+**2. Empty wardrobe.** This didn't crash or return `""`. `suggest_outfit` returns general styling advice under the header `No wardrobe saved yet — general styling ideas:`, and the fit card still gets written. No handler was needed. The output below is the eval's `empty wardrobe` diagnostic scenario, try 1, from `results/run_2026-10-13_1425_before.md`. All 5 tries completed with that header.
+
+```
+[3] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=0 items
+      out: No wardrobe saved yet — general styling ideas: Hey there! That Wrangler jacket is such a solid find. Structure…
+[4] create_fit_card
+      in:  outfit (737 chars), new_item.id=lst_007
+      out: Scored this sweet Wrangler Denim Jacket on Poshmark for just $42! Obsessed with the light wash and structured …
+
+Outfit suggestion:
+No wardrobe saved yet — general styling ideas:
+Hey there! That Wrangler jacket is such a solid find. Structured shoulders on a light wash denim make it super versatile.
+
+For an easy everyday look, throw it over an oversized graphic tee in black or grey, paired with black biker shorts or straight-leg black jeans. Finish it off with chunky white sneakers and a canvas tote. The vibe is effortless, sporty, and very downtown streetwear.
+
+For a cuter weekend outfit, layer it directly over a floral midi slip dress in olive green or pastel yellow. Add a pair of well-worn canvas high-top sneakers and a simple canvas shoulder bag. The vibe here is a fun, vintage-inspired mix of sweet and rugged. Both are super easy to build from basics!
+```
+
+(My first three manual tries of this failure mode, `'oversized crewneck sweatshirt under $25' --empty-wardrobe`, were blocked by real Gemini 503s. A fourth try, with the handler in place, completed with general styling advice.)
+
+**3. Model unavailable.** Before any handler, a one-character change to the key made `run_agent` raise. `app.py`'s catch-all printed the line below and exited with code 1. The search result was lost, and `run_eval.py` would have logged the try as CRASHED:
+
+```
+$ python app.py ask 'cropped cardigan size S under $35'      # bad key, before the handler
+
+ModelUnavailable: The model rejected your API key. Check GEMINI_API_KEY in your .env file, or create a fresh key at aistudio.google.com.
+
+1 model calls this session
+```
+
+Real 503s failed the same way. One of them threw away an outfit that had already been generated, because `create_fit_card` failed after `suggest_outfit` had succeeded. So I added a `ModelUnavailable` handler to `run_agent`. My first version pasted the raw 503 error dict and told everyone to "try again in a minute", including people whose key was rejected and for whom retrying never helps. This real outage run was handled by that first version ([results/trace_real_503_outage.txt](results/trace_real_503_outage.txt)):
+
+```
+[3] model unavailable
+      out: Couldn't reach the model: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experie…
+      →    stopping; search result kept in session
+
+  Found 90s Track Jacket — Navy/White Stripe ($45 on poshmark), but couldn't write the outfit and the fit card because the model is unavailable: Couldn't reach the model: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}} Your search still worked. Try the same query again in a minute; if the message says your API key was rejected, fix GEMINI_API_KEY in .env first.
+```
+
+The final handler gives two separate messages and no raw JSON.
+
+*Key rejected.* I backed up `.env`, changed one character of the key and ran a new query. Afterwards I restored the file, confirmed with `cmp` that it was byte-identical to the backup, and confirmed `.env` is still git-ignored ([results/failure_key_rejected.txt](results/failure_key_rejected.txt)):
+
+```
+$ python app.py ask 'leather bomber jacket under $80' --trace
+...
+[3] model unavailable
+      out: key rejected
+      →    stopping; search result kept in session
+
+  Found 90s Leather Bomber — Black ($75 on depop), but couldn't write the outfit and the fit card: the model rejected your API key. Check GEMINI_API_KEY in your .env file (or create a new key at aistudio.google.com). Retrying won't help until the key is fixed.
+
+1 model calls this session
+```
+
+*Service busy.* This one is simulated. I added a temporary line at the top of `suggest_outfit` that raised `ModelUnavailable` with the exact 503 text Gemini had returned, ran the query, then removed the line (`git diff tools.py` was empty afterwards). See [results/failure_service_busy_simulated.txt](results/failure_service_busy_simulated.txt):
+
+```
+$ python app.py ask 'cropped cardigan size S under $35' --trace
+...
+[3] model unavailable
+      out: service busy
+      →    stopping; search result kept in session
+
+  Found Knit Cardigan — Chunky Brown ($35 on depop), but couldn't write the outfit and the fit card: the model is busy or couldn't be reached right now. Try the same query again in a minute or two.
+
+0 model calls this session
+```
+
+Both of these were captured before the improvement. Since the improvement, a busy service gets one wait-and-retry before this message appears. A rejected key still stops at once.
 
 
 
@@ -497,24 +650,77 @@ full. -->
 
      `python run_eval.py --label after` -->
 
-**What I changed:**
+**What I changed:** I added a second branch to `agent.py::run_agent` (commit `f1ae509`). When a model call raises `ModelUnavailable` and the error is a busy service (a 503, "unavailable", a timeout), the loop records `model unavailable / branch: busy, waiting 20s and retrying once` in the trace, waits 20 seconds and tries again **once**. The retry only redoes the step that hadn't finished, so if the outfit is already in the session, only the fit card is retried. A rejected key still stops immediately, because waiting never fixes a bad key. If the second attempt is also busy, the run stops with the same "model is busy" message as before. Nothing else changed: same prompts, same tools, same scenarios, same pacing.
 
-**Which failure it was meant to fix:**
+**Which failure it was meant to fix:** the only one the diagnosis found. In the before run, 7 tries (all 5 of C3 query 5, plus C4 tries 1 and 4) were lost to a transient 503 at `suggest_outfit`'s model call. `generate.py` doesn't retry a 503, so one busy response ended the whole run. I picked a branch in my loop over adding 503 to `generate.py`'s retry condition for two reasons: it's one of the improvement types the brief names, and every retry shows up in the trace, so the after-run could count exactly how often it fired.
 
-### Run Log — After
+**Checking the branch itself:** a 503 can't be produced on demand, so I tested the branch with stubbed tools that raise a 503 or a bad-key error. The wait was set to 0 for the test only, and there were no model calls. Results are in [results/retry_branch_stub_test.txt](results/retry_branch_stub_test.txt):
+
+| Case | What happened |
+|---|---|
+| busy, then OK | 2 outfit calls, then the fit card; no error |
+| busy twice | 2 outfit calls, then the "busy" message |
+| key rejected | 1 call, then stops; no retry |
+| busy only at the fit card | the outfit isn't redone (1 call), the fit card is retried (2 calls) |
+| no errors | unchanged |
+
+The first version of this test failed: a rejected key was still retried because of a missing `break`. I fixed that before committing.
+
+### Run Log — Before and After
+
+Before: `results/run_2026-10-13_1425_before.md` (commit `c9ba1b3`, 14:17–14:25). After: [results/run_2026-10-13_1440_after.md](results/run_2026-10-13_1440_after.md) (commit `f1ae509`, 14:31–14:40, 70 tries, 130 model calls, 0 crashes, console in [results/run_after_console.txt](results/run_after_console.txt), scored in [results/score_after.txt](results/score_after.txt)). Both runs used the same scorer, the same strict per-query mapping for criteria 3 and 5, cache off and temperature 0.9.
+
+**Run Log — Before**
 
 | Criterion | Target | Try 1 | Try 2 | Try 3 | Try 4 | Try 5 | Verdict |
 |---|---|---|---|---|---|---|---|
-| 1.  |  |  |  |  |  |  |  |
-| 2.  |  |  |  |  |  |  |  |
-| 3.  |  |  |  |  |  |  |  |
-| 4.  |  |  |  |  |  |  |  |
-| 5.  |  |  |  |  |  |  |  |
+| 1. Matching query completes all three tools | ≥4 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+| 2. Impossible query stops before `suggest_outfit` | 5 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+| 3. `suggest_outfit` gets the selected item and uses its title | id 5 of 5; words ≥4 of 5 | PASS | PASS | PASS | PASS | FAIL | MISSED (id 4/5; words 4/5) |
+| 4. Fit card on `lst_006` is postable and varies | ≥4 of 5 pass; ≥4 distinct | FAIL | PASS | PASS | FAIL | PASS | MISSED (3/5; 3 distinct) |
+| 5. Search respects price ceiling and size | 5 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
 
-**Did it help, and how do I know:**
+**Run Log — After**
 
-<!-- If it made things worse, say that. Honestly reported, that earns full
-     credit and is more interesting than one that worked. -->
+| Criterion | Target | Try 1 | Try 2 | Try 3 | Try 4 | Try 5 | Verdict |
+|---|---|---|---|---|---|---|---|
+| 1. Matching query completes all three tools | ≥4 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+| 2. Impossible query stops before `suggest_outfit` | 5 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+| 3. `suggest_outfit` gets the selected item and uses its title | id 5 of 5; words ≥4 of 5 | PASS | PASS | PASS | PASS | PASS | MET (id 5/5; words 5/5) |
+| 4. Fit card on `lst_006` is postable and varies | ≥4 of 5 pass; ≥4 distinct | PASS | PASS | PASS | PASS | PASS | MET (5/5; 5 distinct) |
+| 5. Search respects price ceiling and size | 5 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+
+(Criteria 3 and 5: Try k = named query k, and a query passes only if all 5 of its runs pass. That's all 25 runs, listed in `results/score_after.txt`.)
+
+**Real output from the after run** (`results/run_2026-10-13_1440_after.md`, written by `run_eval.py::write_report`). C3 query 5, the cell that failed before, try 1:
+
+```
+[1] parse_query
+      in:  denim jacket under $50
+      out: description='denim jacket', size=None, max_price=50.0
+[2] search_listings (via MCP)
+      in:  description='denim jacket', size=None, max_price=50.0
+      out: 7 items: Denim Jacket — Light Wash, Cropped, High-Waisted Denim Shorts — Cutoff, Denim Vest — Medium Wash, Studded … +4 more
+      →    branch: not empty, selected_item = lst_007
+[3] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=10 items
+      out: Outfit One Denim Jacket — Light Wash, Cropped White ribbed tank top Baggy straight-leg jeans, dark wash Chunky…
+[4] create_fit_card
+      in:  outfit (598 chars), new_item.id=lst_007
+      out: Scored this vintage Wrangler Denim Jacket on Poshmark for just $42! I'm obsessed with the grunge-meets-prep vi…
+```
+
+C4, all five `lst_006` captions from `tools.py::create_fit_card`, which are 5 distinct strings:
+
+```
+try 1 (226 chars): Scored this sick 2003 tour bootleg Graphic Tee for just $24 on depop and I’m obsessed. Gives off the ultimate grunge vibe whether I'm styling it baggy with dark denim or tucked into tailored khakis. Head to my shop to grab it!
+try 2 (219 chars): Scored this 2003 bootleg Graphic Tee for just $24 on depop and I’m obsessed. I'm styling it two ways: grunge with dark double denim, and clean streetwear with khaki trousers. Both give off such effortless vintage vibes!
+try 3 (214 chars): Scored this 2003 Tour Bootleg Style Graphic Tee on depop for just $24! Obsessed with styling it grunge with baggy denim and boots, or leaning into streetwear with khaki trousers. It’s the ultimate effortless piece.
+try 4 (209 chars): Scored this 2003 Tour Bootleg Style Graphic Tee for just $24 on depop! Styling it two ways: grungy with baggy dark denim and combat boots, then leaning into streetwear with wide-leg khakis and a grey crewneck.
+try 5 (193 chars): Scored this sick 2003 tour bootleg Graphic Tee on depop for just $24! Obsessed with how it brings grunge energy to baggy jeans and contrast layering. Totally nailing that moody streetwear vibe.
+```
+
+**Did it help, and how do I know:** The scores went from 3 MET to 5 MET, but **I can't credit that to my change.** The retry branch **fired 0 times** in the after run: there are no `retrying once` lines and no `model unavailable` lines at all in `results/run_after_console.txt`. Gemini returned no 503s during that run, so every try would have passed without the improvement too. The after-run measured a healthy service, not my fix. What I *can* show is that the branch behaves correctly when a 503 happens (the stub test above), and that the failure it targets was real (the 7 tries in the before run). Whether it would actually have rescued those 7 tries depends on whether the 503 bursts last less than 20 seconds. I didn't measure that. In the before run, five consecutive runs of one query all failed, which suggests some bursts last longer than one 20-second wait. This is the noise problem with outages: before and after can't be compared cleanly when the thing being fixed may not happen during the "after" window.
 
 
 
@@ -525,6 +731,18 @@ full. -->
 <!-- For each criterion still missed: what you'd do, and why you stopped where
      you did. "I ran out of time" is fine if it's true. Pretending nothing is
      left is not. -->
+
+No criterion is missed in the after run. That doesn't mean nothing is broken, and it would be misleading to stop there.
+
+**1. C3 and C4 still depend on Gemini being healthy, and my fix is unproven against a real outage.** Both misses in the before run were 503s. The after run had none, so the retry branch never ran for real. A burst longer than one 20-second wait still ends the run with "the model is busy" and no fit card, and the before run looked like it had bursts that long (5 consecutive runs of one query all failed). *What I'd do:* add a test-only switch that makes `generate()` fail with a 503 on a set fraction of calls, then run the eval with and without the branch, so the comparison doesn't depend on Google's load that afternoon. I'd also log how long real 503 bursts last before choosing the wait. If bursts are longer than 20 s, a backoff (20 s, then 40 s) or a retry inside `generate.py` would be the better fix. *Why I stopped:* the unit allows one improvement, and I can't make Gemini return 503s on demand. Adding a fault-injection switch would be a second code change outside the allowed list.
+
+**2. Three of my targets were too easy to tell me much.** C2 and C5 are deterministic, so 5 tries are 1 test repeated 5 times. C2 uses one impossible query, and 3 of C5's 5 queries return exactly one listing. C1 is one query. *What I'd do:* tighten C2 first. Use 5 different impossible queries, each emptied by a different filter (price only, size only, keywords only), and require the message to name the filter that actually caused it. Right now the "use fewer or broader keywords" tip is added to every empty-search message, even when the keywords were fine. *Why I stopped:* the rules say a target I set in unit 3 isn't changed just because it was easy, and a new criterion would need writing down before any results exist. I'd write it at the start of the next unit.
+
+**3. Search relevance has no floor.** `'plaid mini skirt under $40'` picked a reversible **bucket hat** (`lst_034`) as the top result, because the data has no skirt and the word "plaid" alone scored. None of my criteria checks relevance, so this passes everything. *What I'd do:* require the item word, the last keyword ("skirt"), to match the title, tags or category. If it doesn't, return `[]`, so the empty-search branch can say "no skirts in stock". *Why I stopped:* it's a tool change outside this unit's one allowed improvement, and the diagnosis didn't point at it, because no criterion measured it.
+
+**4. Each MCP search costs about 2.3 s** (vs about 1 ms direct), because `mcp_client.call_tool` starts a new server process for every call. That's fine for one query on the command line, but under `serve.py` every request would pay it. *What I'd do:* keep one client session open for the life of the process. *Why I stopped:* `mcp_client.py` is given plumbing, and the brief chose the simpler model on purpose for this unit.
+
+**5. The unit-3 "invented shoes" problem (How I Used AI, Moment 1) is still unmeasured.** C3 checks that the outfit names the new item. It doesn't check that every other piece named is really in the wardrobe. In this unit's runs, every piece I spot-checked was a real wardrobe item (including "Black cropped zip hoodie", which I checked), but I didn't check all 100+ outfits. *What I'd do:* a criterion that compares every listed piece against the wardrobe names.
 
 
 
