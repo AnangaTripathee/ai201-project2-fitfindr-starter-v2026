@@ -1,0 +1,23 @@
+# Stub test of the busy-retry branch in agent.py::run_agent (commit f1ae509).
+# suggest_outfit / create_fit_card replaced by stubs that raise ModelUnavailable
+# with a 503 or bad-key message; BUSY_RETRY_WAIT set to 0 for the test only. No model calls.
+=== busy then ok
+[3] model unavailable
+      →    branch: busy, waiting 0s and retrying once
+  -> outfit calls=2 card calls=1 fit_card='CARD' error=''
+=== busy twice
+[3] model unavailable
+      →    branch: busy, waiting 0s and retrying once
+[4] model unavailable
+      →    stopping; search result kept in session
+  -> outfit calls=2 card calls=0 fit_card=None error="Found Y2K Baby Tee — Butterfly Print ($18 on depop), but couldn't writ"
+=== key rejected
+[3] model unavailable
+      →    stopping; search result kept in session
+  -> outfit calls=1 card calls=0 fit_card=None error="Found Y2K Baby Tee — Butterfly Print ($18 on depop), but couldn't writ"
+=== busy only at fit card
+[3] model unavailable
+      →    branch: busy, waiting 0s and retrying once
+  -> outfit calls=1 card calls=2 fit_card='CARD' error=''
+=== no errors
+  -> outfit calls=1 card calls=1 fit_card='CARD' error=''

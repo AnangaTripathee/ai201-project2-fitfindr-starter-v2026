@@ -1,0 +1,1016 @@
+Cache is OFF for this run — that's deliberate.
+
+matching query completes  (example wardrobe)
+  query: vintage graphic tee under $30
+[1] parse_query
+      in:  vintage graphic tee under $30
+      out: description='vintage graphic tee', size=None, max_price=30.0
+[2] search_listings (via MCP)
+      in:  description='vintage graphic tee', size=None, max_price=30.0
+      out: 10 items: Y2K Baby Tee — Butterfly Print, Vintage Band Tee — Faded Grey, Graphic Tee — 2003 Tour Bootleg Style … +7 more
+      →    branch: not empty, selected_item = lst_002
+[3] suggest_outfit
+      in:  new_item.id=lst_002 (Y2K Baby Tee — Butterfly Print), wardrobe=10 items
+      out: Outfit 1: - Y2K Baby Tee — Butterfly Print - Baggy straight-leg jeans, dark wash - Vintage black denim jacket …
+[4] create_fit_card
+      in:  outfit (603 chars), new_item.id=lst_002
+      out: Score this cute Y2K Baby Tee for just $18 on depop! I'm styling it two ways: with baggy dark denim for an effo…
+  try 1: completed — fit card 208 chars
+[1] parse_query
+      in:  vintage graphic tee under $30
+      out: description='vintage graphic tee', size=None, max_price=30.0
+[2] search_listings (via MCP)
+      in:  description='vintage graphic tee', size=None, max_price=30.0
+      out: 10 items: Y2K Baby Tee — Butterfly Print, Vintage Band Tee — Faded Grey, Graphic Tee — 2003 Tour Bootleg Style … +7 more
+      →    branch: not empty, selected_item = lst_002
+[3] suggest_outfit
+      in:  new_item.id=lst_002 (Y2K Baby Tee — Butterfly Print), wardrobe=10 items
+      out: Outfit 1: - Y2K Baby Tee — Butterfly Print - Baggy straight-leg jeans, dark wash - Vintage black denim jacket …
+[4] create_fit_card
+      in:  outfit (651 chars), new_item.id=lst_002
+      out: Found the ultimate Y2K Baby Tee for just $18! Listing it on depop now. Rocking it with baggy denim and sneaker…
+  try 2: completed — fit card 211 chars
+[1] parse_query
+      in:  vintage graphic tee under $30
+      out: description='vintage graphic tee', size=None, max_price=30.0
+[2] search_listings (via MCP)
+      in:  description='vintage graphic tee', size=None, max_price=30.0
+      out: 10 items: Y2K Baby Tee — Butterfly Print, Vintage Band Tee — Faded Grey, Graphic Tee — 2003 Tour Bootleg Style … +7 more
+      →    branch: not empty, selected_item = lst_002
+[3] suggest_outfit
+      in:  new_item.id=lst_002 (Y2K Baby Tee — Butterfly Print), wardrobe=10 items
+      out: Outfit 1: - Y2K Baby Tee — Butterfly Print - Baggy straight-leg jeans, dark wash - Chunky white sneakers - Bla…
+[4] create_fit_card
+      in:  outfit (572 chars), new_item.id=lst_002
+      out: Scored this butterfly Y2K Baby Tee for just $18 and I'm obsessed! Going for casual off-duty model vibes with b…
+  try 3: completed — fit card 226 chars
+[1] parse_query
+      in:  vintage graphic tee under $30
+      out: description='vintage graphic tee', size=None, max_price=30.0
+[2] search_listings (via MCP)
+      in:  description='vintage graphic tee', size=None, max_price=30.0
+      out: 10 items: Y2K Baby Tee — Butterfly Print, Vintage Band Tee — Faded Grey, Graphic Tee — 2003 Tour Bootleg Style … +7 more
+      →    branch: not empty, selected_item = lst_002
+[3] suggest_outfit
+      in:  new_item.id=lst_002 (Y2K Baby Tee — Butterfly Print), wardrobe=10 items
+      out: Outfit one: Pair the Y2K Baby Tee — Butterfly Print with your baggy straight-leg jeans, vintage black denim ja…
+[4] create_fit_card
+      in:  outfit (741 chars), new_item.id=lst_002
+      out: Scored this Y2K Baby Tee for just $18 on depop! I'm styling it two ways: with baggy denim for street vibes or …
+  try 4: completed — fit card 181 chars
+[1] parse_query
+      in:  vintage graphic tee under $30
+      out: description='vintage graphic tee', size=None, max_price=30.0
+[2] search_listings (via MCP)
+      in:  description='vintage graphic tee', size=None, max_price=30.0
+      out: 10 items: Y2K Baby Tee — Butterfly Print, Vintage Band Tee — Faded Grey, Graphic Tee — 2003 Tour Bootleg Style … +7 more
+      →    branch: not empty, selected_item = lst_002
+[3] suggest_outfit
+      in:  new_item.id=lst_002 (Y2K Baby Tee — Butterfly Print), wardrobe=10 items
+      out: Outfit 1: - Y2K Baby Tee — Butterfly Print - Baggy straight-leg jeans, dark wash - Vintage black denim jacket …
+[4] create_fit_card
+      in:  outfit (555 chars), new_item.id=lst_002
+      out: Scored this dreamy Y2K Baby Tee for just $18 on depop! I’m styling it two ways: balanced with baggy denim for …
+  try 5: completed — fit card 171 chars
+
+impossible query stops early  (example wardrobe)
+  query: designer ballgown size XXS under $5
+[1] parse_query
+      in:  designer ballgown size XXS under $5
+      out: description='designer ballgown', size='XXS', max_price=5.0
+[2] search_listings (via MCP)
+      in:  description='designer ballgown', size='XXS', max_price=5.0
+      out: [] (empty)
+      →    branch: empty, stopping before suggest_outfit
+  try 1: stopped early — No listings matched 'designer ballgown' in size XXS under $5
+[1] parse_query
+      in:  designer ballgown size XXS under $5
+      out: description='designer ballgown', size='XXS', max_price=5.0
+[2] search_listings (via MCP)
+      in:  description='designer ballgown', size='XXS', max_price=5.0
+      out: [] (empty)
+      →    branch: empty, stopping before suggest_outfit
+  try 2: stopped early — No listings matched 'designer ballgown' in size XXS under $5
+[1] parse_query
+      in:  designer ballgown size XXS under $5
+      out: description='designer ballgown', size='XXS', max_price=5.0
+[2] search_listings (via MCP)
+      in:  description='designer ballgown', size='XXS', max_price=5.0
+      out: [] (empty)
+      →    branch: empty, stopping before suggest_outfit
+  try 3: stopped early — No listings matched 'designer ballgown' in size XXS under $5
+[1] parse_query
+      in:  designer ballgown size XXS under $5
+      out: description='designer ballgown', size='XXS', max_price=5.0
+[2] search_listings (via MCP)
+      in:  description='designer ballgown', size='XXS', max_price=5.0
+      out: [] (empty)
+      →    branch: empty, stopping before suggest_outfit
+  try 4: stopped early — No listings matched 'designer ballgown' in size XXS under $5
+[1] parse_query
+      in:  designer ballgown size XXS under $5
+      out: description='designer ballgown', size='XXS', max_price=5.0
+[2] search_listings (via MCP)
+      in:  description='designer ballgown', size='XXS', max_price=5.0
+      out: [] (empty)
+      →    branch: empty, stopping before suggest_outfit
+  try 5: stopped early — No listings matched 'designer ballgown' in size XXS under $5
+
+empty wardrobe  (empty wardrobe)
+  query: denim jacket under $50
+[1] parse_query
+      in:  denim jacket under $50
+      out: description='denim jacket', size=None, max_price=50.0
+[2] search_listings (via MCP)
+      in:  description='denim jacket', size=None, max_price=50.0
+      out: 7 items: Denim Jacket — Light Wash, Cropped, High-Waisted Denim Shorts — Cutoff, Denim Vest — Medium Wash, Studded … +4 more
+      →    branch: not empty, selected_item = lst_007
+[3] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=0 items
+      out: No wardrobe saved yet — general styling ideas: Hey friend, what a stellar find! Wrangler denim is built to las…
+[4] create_fit_card
+      in:  outfit (707 chars), new_item.id=lst_007
+      out: Scored this vintage Wrangler Denim Jacket on Poshmark for just $42! Obsessed with the structured shoulders and…
+  try 1: completed — fit card 244 chars
+[1] parse_query
+      in:  denim jacket under $50
+      out: description='denim jacket', size=None, max_price=50.0
+[2] search_listings (via MCP)
+      in:  description='denim jacket', size=None, max_price=50.0
+      out: 7 items: Denim Jacket — Light Wash, Cropped, High-Waisted Denim Shorts — Cutoff, Denim Vest — Medium Wash, Studded … +4 more
+      →    branch: not empty, selected_item = lst_007
+[3] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=0 items
+      out: No wardrobe saved yet — general styling ideas: Hey there! That Wrangler jacket is such a fun find, especially …
+[4] create_fit_card
+      in:  outfit (670 chars), new_item.id=lst_007
+      out: Scored this vintage Wrangler Denim Jacket on Poshmark for just $42! Obsessed with the structured shoulders. Ca…
+  try 2: completed — fit card 184 chars
+[1] parse_query
+      in:  denim jacket under $50
+      out: description='denim jacket', size=None, max_price=50.0
+[2] search_listings (via MCP)
+      in:  description='denim jacket', size=None, max_price=50.0
+      out: 7 items: Denim Jacket — Light Wash, Cropped, High-Waisted Denim Shorts — Cutoff, Denim Vest — Medium Wash, Studded … +4 more
+      →    branch: not empty, selected_item = lst_007
+[3] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=0 items
+      out: No wardrobe saved yet — general styling ideas: Hey friend! That Wrangler jacket is such a fun find—structured …
+  [rate limit] 15 requests used this minute. Waiting 39s. This is normal.
+[4] create_fit_card
+      in:  outfit (685 chars), new_item.id=lst_007
+      out: Score! Snagged this vintage Wrangler Denim Jacket on poshmark for just $42. I'm totally obsessed with giving i…
+  try 3: completed — fit card 175 chars
+[1] parse_query
+      in:  denim jacket under $50
+      out: description='denim jacket', size=None, max_price=50.0
+[2] search_listings (via MCP)
+      in:  description='denim jacket', size=None, max_price=50.0
+      out: 7 items: Denim Jacket — Light Wash, Cropped, High-Waisted Denim Shorts — Cutoff, Denim Vest — Medium Wash, Studded … +4 more
+      →    branch: not empty, selected_item = lst_007
+[3] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=0 items
+      out: No wardrobe saved yet — general styling ideas: Hey there! That Wrangler jacket is such a fun find, especially …
+[4] create_fit_card
+      in:  outfit (693 chars), new_item.id=lst_007
+      out: Scored this vintage Wrangler Denim Jacket on Poshmark for just $42! Obsessed with the structured shoulders. Ca…
+  try 4: completed — fit card 171 chars
+[1] parse_query
+      in:  denim jacket under $50
+      out: description='denim jacket', size=None, max_price=50.0
+[2] search_listings (via MCP)
+      in:  description='denim jacket', size=None, max_price=50.0
+      out: 7 items: Denim Jacket — Light Wash, Cropped, High-Waisted Denim Shorts — Cutoff, Denim Vest — Medium Wash, Studded … +4 more
+      →    branch: not empty, selected_item = lst_007
+[3] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=0 items
+      out: No wardrobe saved yet — general styling ideas: Hey friend, great find! A vintage Wrangler jacket is a total wa…
+[4] create_fit_card
+      in:  outfit (569 chars), new_item.id=lst_007
+      out: Scored this vintage Wrangler Denim Jacket on Poshmark for just $42! Obsessed with styling it for 90s streetwea…
+  try 5: completed — fit card 201 chars
+
+c3 q1 vintage graphic tee  (example wardrobe)
+  query: vintage graphic tee under $30
+[1] parse_query
+      in:  vintage graphic tee under $30
+      out: description='vintage graphic tee', size=None, max_price=30.0
+[2] search_listings (via MCP)
+      in:  description='vintage graphic tee', size=None, max_price=30.0
+      out: 10 items: Y2K Baby Tee — Butterfly Print, Vintage Band Tee — Faded Grey, Graphic Tee — 2003 Tour Bootleg Style … +7 more
+      →    branch: not empty, selected_item = lst_002
+[3] suggest_outfit
+      in:  new_item.id=lst_002 (Y2K Baby Tee — Butterfly Print), wardrobe=10 items
+      out: Outfit 1: - Y2K Baby Tee — Butterfly Print - Baggy straight-leg jeans, dark wash - Chunky white sneakers - Bla…
+[4] create_fit_card
+      in:  outfit (559 chars), new_item.id=lst_002
+      out: Score! Found this butterfly Y2K Baby Tee thrifting and I'm obsessed. Just listed it on depop for $18. Grab it …
+  try 1: completed — fit card 163 chars
+[1] parse_query
+      in:  vintage graphic tee under $30
+      out: description='vintage graphic tee', size=None, max_price=30.0
+[2] search_listings (via MCP)
+      in:  description='vintage graphic tee', size=None, max_price=30.0
+      out: 10 items: Y2K Baby Tee — Butterfly Print, Vintage Band Tee — Faded Grey, Graphic Tee — 2003 Tour Bootleg Style … +7 more
+      →    branch: not empty, selected_item = lst_002
+[3] suggest_outfit
+      in:  new_item.id=lst_002 (Y2K Baby Tee — Butterfly Print), wardrobe=10 items
+      out: Outfit 1: - Y2K Baby Tee — Butterfly Print - Baggy straight-leg jeans, dark wash - Vintage black denim jacket …
+[4] create_fit_card
+      in:  outfit (615 chars), new_item.id=lst_002
+      out: Scored this Y2K Baby Tee for just $18! Listing it on depop soon. I’m styling it two ways: with baggy dark deni…
+  try 2: completed — fit card 200 chars
+[1] parse_query
+      in:  vintage graphic tee under $30
+      out: description='vintage graphic tee', size=None, max_price=30.0
+[2] search_listings (via MCP)
+      in:  description='vintage graphic tee', size=None, max_price=30.0
+      out: 10 items: Y2K Baby Tee — Butterfly Print, Vintage Band Tee — Faded Grey, Graphic Tee — 2003 Tour Bootleg Style … +7 more
+      →    branch: not empty, selected_item = lst_002
+[3] suggest_outfit
+      in:  new_item.id=lst_002 (Y2K Baby Tee — Butterfly Print), wardrobe=10 items
+      out: Outfit 1: Y2K Baby Tee — Butterfly Print, Baggy straight-leg jeans, dark wash, Chunky white sneakers, Black cr…
+  [rate limit] 15 requests used this minute. Waiting 3s. This is normal.
+[4] create_fit_card
+      in:  outfit (630 chars), new_item.id=lst_002
+      out: Just scored this Y2K Baby Tee for $18 on depop and I’m obsessed with the butterfly print! I'm styling it two w…
+  try 3: completed — fit card 236 chars
+[1] parse_query
+      in:  vintage graphic tee under $30
+      out: description='vintage graphic tee', size=None, max_price=30.0
+[2] search_listings (via MCP)
+      in:  description='vintage graphic tee', size=None, max_price=30.0
+      out: 10 items: Y2K Baby Tee — Butterfly Print, Vintage Band Tee — Faded Grey, Graphic Tee — 2003 Tour Bootleg Style … +7 more
+      →    branch: not empty, selected_item = lst_002
+[3] suggest_outfit
+      in:  new_item.id=lst_002 (Y2K Baby Tee — Butterfly Print), wardrobe=10 items
+      out: Outfit 1 Y2K Baby Tee — Butterfly Print Baggy straight-leg jeans, dark wash Chunky white sneakers Black crossb…
+[4] create_fit_card
+      in:  outfit (584 chars), new_item.id=lst_002
+      out: Scored this Y2K Baby Tee for just $18 on depop and I’m obsessed! It’s giving major brat-pack streetwear vibes …
+  try 4: completed — fit card 167 chars
+[1] parse_query
+      in:  vintage graphic tee under $30
+      out: description='vintage graphic tee', size=None, max_price=30.0
+[2] search_listings (via MCP)
+      in:  description='vintage graphic tee', size=None, max_price=30.0
+      out: 10 items: Y2K Baby Tee — Butterfly Print, Vintage Band Tee — Faded Grey, Graphic Tee — 2003 Tour Bootleg Style … +7 more
+      →    branch: not empty, selected_item = lst_002
+[3] suggest_outfit
+      in:  new_item.id=lst_002 (Y2K Baby Tee — Butterfly Print), wardrobe=10 items
+      out: Outfit One: Pair the Y2K Baby Tee — Butterfly Print with your baggy straight-leg jeans, dark wash. Layer the v…
+[4] create_fit_card
+      in:  outfit (776 chars), new_item.id=lst_002
+      out: Scored this cute Y2K Baby Tee for just $18 and listed it on depop! Styling it two ways: baggy denim for classi…
+  try 5: completed — fit card 191 chars
+
+c3 q2 90s track jacket  (example wardrobe)
+  query: 90s track jacket in size M
+[1] parse_query
+      in:  90s track jacket in size M
+      out: description='90s track jacket', size='M', max_price=None
+[2] search_listings (via MCP)
+      in:  description='90s track jacket', size='M', max_price=None
+      out: 5 items: 90s Track Jacket — Navy/White Stripe, 90s Leather Bomber — Black, Bucket Hat — Reversible, Brown Plaid … +2 more
+      →    branch: not empty, selected_item = lst_004
+  [rate limit] 15 requests used this minute. Waiting 38s. This is normal.
+[3] suggest_outfit
+      in:  new_item.id=lst_004 (90s Track Jacket — Navy/White Stripe), wardrobe=10 items
+      out: Outfit 1: - 90s Track Jacket — Navy/White Stripe - White ribbed tank top - Baggy straight-leg jeans, dark wash…
+[4] create_fit_card
+      in:  outfit (557 chars), new_item.id=lst_004
+      out: Scored this vintage Champion 90s Track Jacket on poshmark for just $45! Giving major sporty-chic energy whethe…
+  try 1: completed — fit card 166 chars
+[1] parse_query
+      in:  90s track jacket in size M
+      out: description='90s track jacket', size='M', max_price=None
+[2] search_listings (via MCP)
+      in:  description='90s track jacket', size='M', max_price=None
+      out: 5 items: 90s Track Jacket — Navy/White Stripe, 90s Leather Bomber — Black, Bucket Hat — Reversible, Brown Plaid … +2 more
+      →    branch: not empty, selected_item = lst_004
+[3] suggest_outfit
+      in:  new_item.id=lst_004 (90s Track Jacket — Navy/White Stripe), wardrobe=10 items
+      out: Outfit One Start with the white ribbed tank top tucked into your baggy straight-leg jeans, dark wash. Layer th…
+[4] create_fit_card
+      in:  outfit (813 chars), new_item.id=lst_004
+      out: Scored this vintage Champion 90s Track Jacket for just $45 on poshmark! I'm styling it two ways: with baggy de…
+  try 2: completed — fit card 194 chars
+[1] parse_query
+      in:  90s track jacket in size M
+      out: description='90s track jacket', size='M', max_price=None
+[2] search_listings (via MCP)
+      in:  description='90s track jacket', size='M', max_price=None
+      out: 5 items: 90s Track Jacket — Navy/White Stripe, 90s Leather Bomber — Black, Bucket Hat — Reversible, Brown Plaid … +2 more
+      →    branch: not empty, selected_item = lst_004
+[3] suggest_outfit
+      in:  new_item.id=lst_004 (90s Track Jacket — Navy/White Stripe), wardrobe=10 items
+      out: Outfit One: Layer the White ribbed tank top under the 90s Track Jacket — Navy/White Stripe, paired with Baggy …
+[4] create_fit_card
+      in:  outfit (609 chars), new_item.id=lst_004
+      out: Found this vintage Champion 90s Track Jacket on Poshmark for just $45! Giving effortless retro streetwear with…
+  try 3: completed — fit card 168 chars
+[1] parse_query
+      in:  90s track jacket in size M
+      out: description='90s track jacket', size='M', max_price=None
+[2] search_listings (via MCP)
+      in:  description='90s track jacket', size='M', max_price=None
+      out: 5 items: 90s Track Jacket — Navy/White Stripe, 90s Leather Bomber — Black, Bucket Hat — Reversible, Brown Plaid … +2 more
+      →    branch: not empty, selected_item = lst_004
+[3] suggest_outfit
+      in:  new_item.id=lst_004 (90s Track Jacket — Navy/White Stripe), wardrobe=10 items
+      out: Outfit One: Layer the White ribbed tank top under the 90s Track Jacket — Navy/White Stripe, paired with your B…
+[4] create_fit_card
+      in:  outfit (706 chars), new_item.id=lst_004
+      out: Scored this vintage Champion 90s Track Jacket for just $45 on Poshmark! Rocking it over a white tank with bagg…
+  try 4: completed — fit card 205 chars
+[1] parse_query
+      in:  90s track jacket in size M
+      out: description='90s track jacket', size='M', max_price=None
+[2] search_listings (via MCP)
+      in:  description='90s track jacket', size='M', max_price=None
+      out: 5 items: 90s Track Jacket — Navy/White Stripe, 90s Leather Bomber — Black, Bucket Hat — Reversible, Brown Plaid … +2 more
+      →    branch: not empty, selected_item = lst_004
+[3] suggest_outfit
+      in:  new_item.id=lst_004 (90s Track Jacket — Navy/White Stripe), wardrobe=10 items
+      out: Outfit One: Tuck the white ribbed tank top into the baggy straight-leg jeans, dark wash, layer the 90s Track J…
+[4] create_fit_card
+      in:  outfit (791 chars), new_item.id=lst_004
+      out: Scored this vintage Champion 90s Track Jacket for just $45 on poshmark! I'm obsessed with styling it over bagg…
+  try 5: completed — fit card 202 chars
+
+c3 q3 silk slip dress  (example wardrobe)
+  query: silk slip dress in midi length under $40
+[1] parse_query
+      in:  silk slip dress in midi length under $40
+      out: description='silk slip dress in midi length', size=None, max_price=40.0
+[2] search_listings (via MCP)
+      in:  description='silk slip dress in midi length', size=None, max_price=40.0
+      out: 5 items: 90s Silk Slip Dress — Floral, Midi Length, Silk Button-Down — Sage Green, Y2K Baby Tee — Butterfly Print … +2 more
+      →    branch: not empty, selected_item = lst_013
+  [rate limit] 15 requests used this minute. Waiting 3s. This is normal.
+[3] suggest_outfit
+      in:  new_item.id=lst_013 (90s Silk Slip Dress — Floral, Midi Length), wardrobe=10 items
+      out: Outfit One: Layer the 90s Silk Slip Dress — Floral, Midi Length over the white ribbed tank top, and pair it wi…
+[4] create_fit_card
+      in:  outfit (665 chars), new_item.id=lst_013
+      out: Scored this 90s Silk Slip Dress for just $30 on depop and I’m obsessed! I love layering it over a tank with co…
+  try 1: completed — fit card 199 chars
+[1] parse_query
+      in:  silk slip dress in midi length under $40
+      out: description='silk slip dress in midi length', size=None, max_price=40.0
+[2] search_listings (via MCP)
+      in:  description='silk slip dress in midi length', size=None, max_price=40.0
+      out: 5 items: 90s Silk Slip Dress — Floral, Midi Length, Silk Button-Down — Sage Green, Y2K Baby Tee — Butterfly Print … +2 more
+      →    branch: not empty, selected_item = lst_013
+[3] suggest_outfit
+      in:  new_item.id=lst_013 (90s Silk Slip Dress — Floral, Midi Length), wardrobe=10 items
+      out: Outfit one: Layer the oversized grey crewneck sweatshirt right over the 90s Silk Slip Dress — Floral, Midi Len…
+[4] create_fit_card
+      in:  outfit (517 chars), new_item.id=lst_013
+      out: Scored this gorgeous 90s Silk Slip Dress for just $30 on depop! I'm living for the grunge vibe, so I'm styling…
+  try 2: completed — fit card 320 chars
+[1] parse_query
+      in:  silk slip dress in midi length under $40
+      out: description='silk slip dress in midi length', size=None, max_price=40.0
+[2] search_listings (via MCP)
+      in:  description='silk slip dress in midi length', size=None, max_price=40.0
+      out: 5 items: 90s Silk Slip Dress — Floral, Midi Length, Silk Button-Down — Sage Green, Y2K Baby Tee — Butterfly Print … +2 more
+      →    branch: not empty, selected_item = lst_013
+[3] suggest_outfit
+      in:  new_item.id=lst_013 (90s Silk Slip Dress — Floral, Midi Length), wardrobe=10 items
+      out: Outfit One: Layer the oversized grey crewneck sweatshirt right over your 90s Silk Slip Dress — Floral, Midi Le…
+  [rate limit] 15 requests used this minute. Waiting 39s. This is normal.
+[4] create_fit_card
+      in:  outfit (511 chars), new_item.id=lst_013
+      out: Scored this 90s Silk Slip Dress for just $30 on depop! I’m styling it with a chunky grey crewneck and combat b…
+  try 3: completed — fit card 191 chars
+[1] parse_query
+      in:  silk slip dress in midi length under $40
+      out: description='silk slip dress in midi length', size=None, max_price=40.0
+[2] search_listings (via MCP)
+      in:  description='silk slip dress in midi length', size=None, max_price=40.0
+      out: 5 items: 90s Silk Slip Dress — Floral, Midi Length, Silk Button-Down — Sage Green, Y2K Baby Tee — Butterfly Print … +2 more
+      →    branch: not empty, selected_item = lst_013
+[3] suggest_outfit
+      in:  new_item.id=lst_013 (90s Silk Slip Dress — Floral, Midi Length), wardrobe=10 items
+      out: Outfit 1: 90s Silk Slip Dress — Floral, Midi Length Oversized grey crewneck sweatshirt Chunky white sneakers B…
+[4] create_fit_card
+      in:  outfit (710 chars), new_item.id=lst_013
+      out: Found this 90s Silk Slip Dress for just $30 and I'm obsessed! Snagged it on depop and styled it two ways: cozy…
+  try 4: completed — fit card 207 chars
+[1] parse_query
+      in:  silk slip dress in midi length under $40
+      out: description='silk slip dress in midi length', size=None, max_price=40.0
+[2] search_listings (via MCP)
+      in:  description='silk slip dress in midi length', size=None, max_price=40.0
+      out: 5 items: 90s Silk Slip Dress — Floral, Midi Length, Silk Button-Down — Sage Green, Y2K Baby Tee — Butterfly Print … +2 more
+      →    branch: not empty, selected_item = lst_013
+[3] suggest_outfit
+      in:  new_item.id=lst_013 (90s Silk Slip Dress — Floral, Midi Length), wardrobe=10 items
+      out: Outfit One: Layer the oversized grey crewneck sweatshirt right over the 90s Silk Slip Dress — Floral, Midi Len…
+[4] create_fit_card
+      in:  outfit (582 chars), new_item.id=lst_013
+      out: Scored this 90s Silk Slip Dress for just $30 on depop! Giving it total grunge energy layered under a heavy gre…
+  try 5: completed — fit card 238 chars
+
+c3 q4 platform sneakers  (example wardrobe)
+  query: platform sneakers size 8
+[1] parse_query
+      in:  platform sneakers size 8
+      out: description='platform sneakers', size='8', max_price=None
+[2] search_listings (via MCP)
+      in:  description='platform sneakers', size='8', max_price=None
+      out: 1 items: Platform Sneakers — White Chunky Sole
+      →    branch: not empty, selected_item = lst_019
+[3] suggest_outfit
+      in:  new_item.id=lst_019 (Platform Sneakers — White Chunky Sole), wardrobe=10 items
+      out: Outfit One: Platform Sneakers — White Chunky Sole White ribbed tank top Black cropped zip hoodie Baggy straigh…
+[4] create_fit_card
+      in:  outfit (543 chars), new_item.id=lst_019
+      out: Scored these Platform Sneakers for just $48 on poshmark and I'm obsessed! Giving major Y2K streetwear energy p…
+  try 1: completed — fit card 177 chars
+[1] parse_query
+      in:  platform sneakers size 8
+      out: description='platform sneakers', size='8', max_price=None
+[2] search_listings (via MCP)
+      in:  description='platform sneakers', size='8', max_price=None
+      out: 1 items: Platform Sneakers — White Chunky Sole
+      →    branch: not empty, selected_item = lst_019
+[3] suggest_outfit
+      in:  new_item.id=lst_019 (Platform Sneakers — White Chunky Sole), wardrobe=10 items
+      out: Outfit one: Pair the Platform Sneakers — White Chunky Sole with your white ribbed tank top, baggy straight-leg…
+[4] create_fit_card
+      in:  outfit (784 chars), new_item.id=lst_019
+      out: Scored these Platform Sneakers for just $48 on Poshmark! Total Y2K streetwear vibe. I’m styling them with bagg…
+  try 2: completed — fit card 173 chars
+[1] parse_query
+      in:  platform sneakers size 8
+      out: description='platform sneakers', size='8', max_price=None
+[2] search_listings (via MCP)
+      in:  description='platform sneakers', size='8', max_price=None
+      out: 1 items: Platform Sneakers — White Chunky Sole
+      →    branch: not empty, selected_item = lst_019
+[3] suggest_outfit
+      in:  new_item.id=lst_019 (Platform Sneakers — White Chunky Sole), wardrobe=10 items
+      out: Outfit 1: Platform Sneakers — White Chunky Sole White ribbed tank top Baggy straight-leg jeans, dark wash Blac…
+[4] create_fit_card
+      in:  outfit (635 chars), new_item.id=lst_019
+      out: Scored these Platform Sneakers on Poshmark for just $48 and I’m obsessed. Giving major late 90s streetwear ene…
+  try 3: completed — fit card 171 chars
+[1] parse_query
+      in:  platform sneakers size 8
+      out: description='platform sneakers', size='8', max_price=None
+[2] search_listings (via MCP)
+      in:  description='platform sneakers', size='8', max_price=None
+      out: 1 items: Platform Sneakers — White Chunky Sole
+      →    branch: not empty, selected_item = lst_019
+[3] suggest_outfit
+      in:  new_item.id=lst_019 (Platform Sneakers — White Chunky Sole), wardrobe=10 items
+      out: Outfit One Pair the Platform Sneakers — White Chunky Sole with your White ribbed tank top and Baggy straight-l…
+[4] create_fit_card
+      in:  outfit (716 chars), new_item.id=lst_019
+      out: Scored these Platform Sneakers for $48 on Poshmark and I'm obsessed with the Y2K vibe! Styling them with baggy…
+  try 4: completed — fit card 201 chars
+[1] parse_query
+      in:  platform sneakers size 8
+      out: description='platform sneakers', size='8', max_price=None
+[2] search_listings (via MCP)
+      in:  description='platform sneakers', size='8', max_price=None
+      out: 1 items: Platform Sneakers — White Chunky Sole
+      →    branch: not empty, selected_item = lst_019
+[3] suggest_outfit
+      in:  new_item.id=lst_019 (Platform Sneakers — White Chunky Sole), wardrobe=10 items
+      out: Outfit 1: Platform Sneakers — White Chunky Sole, Black cropped zip hoodie, Baggy straight-leg jeans, dark wash…
+[4] create_fit_card
+      in:  outfit (597 chars), new_item.id=lst_019
+      out: Scored these Platform Sneakers for $48 on poshmark and I'm obsessed! I'm styling them two ways: first with a c…
+  try 5: completed — fit card 243 chars
+
+c3 q5 denim jacket  (example wardrobe)
+  query: denim jacket under $50
+[1] parse_query
+      in:  denim jacket under $50
+      out: description='denim jacket', size=None, max_price=50.0
+[2] search_listings (via MCP)
+      in:  description='denim jacket', size=None, max_price=50.0
+      out: 7 items: Denim Jacket — Light Wash, Cropped, High-Waisted Denim Shorts — Cutoff, Denim Vest — Medium Wash, Studded … +4 more
+      →    branch: not empty, selected_item = lst_007
+  [rate limit] 15 requests used this minute. Waiting 27s. This is normal.
+[3] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=10 items
+      out: Outfit One Denim Jacket — Light Wash, Cropped White ribbed tank top Baggy straight-leg jeans, dark wash Chunky…
+[4] create_fit_card
+      in:  outfit (598 chars), new_item.id=lst_007
+      out: Scored this vintage Wrangler Denim Jacket on Poshmark for just $42! I'm obsessed with the grunge-meets-prep vi…
+  try 1: completed — fit card 232 chars
+[1] parse_query
+      in:  denim jacket under $50
+      out: description='denim jacket', size=None, max_price=50.0
+[2] search_listings (via MCP)
+      in:  description='denim jacket', size=None, max_price=50.0
+      out: 7 items: Denim Jacket — Light Wash, Cropped, High-Waisted Denim Shorts — Cutoff, Denim Vest — Medium Wash, Studded … +4 more
+      →    branch: not empty, selected_item = lst_007
+  [rate limit] 15 requests used this minute. Waiting 12s. This is normal.
+[3] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=10 items
+      out: Outfit 1: Denim Jacket — Light Wash, Cropped White ribbed tank top Baggy straight-leg jeans, dark wash Chunky …
+[4] create_fit_card
+      in:  outfit (706 chars), new_item.id=lst_007
+      out: Scored this vintage Wrangler Denim Jacket on Poshmark for just $42! Obsessed with the cropped light wash fit. …
+  try 2: completed — fit card 206 chars
+[1] parse_query
+      in:  denim jacket under $50
+      out: description='denim jacket', size=None, max_price=50.0
+[2] search_listings (via MCP)
+      in:  description='denim jacket', size=None, max_price=50.0
+      out: 7 items: Denim Jacket — Light Wash, Cropped, High-Waisted Denim Shorts — Cutoff, Denim Vest — Medium Wash, Studded … +4 more
+      →    branch: not empty, selected_item = lst_007
+[3] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=10 items
+      out: Outfit one: Layer the Denim Jacket — Light Wash, Cropped right over your Black cropped zip hoodie, pair them w…
+[4] create_fit_card
+      in:  outfit (728 chars), new_item.id=lst_007
+      out: Scored this Wrangler Denim Jacket on Poshmark for just $42! I'm obsessed with styling it for edgy streetwear o…
+  try 3: completed — fit card 133 chars
+[1] parse_query
+      in:  denim jacket under $50
+      out: description='denim jacket', size=None, max_price=50.0
+[2] search_listings (via MCP)
+      in:  description='denim jacket', size=None, max_price=50.0
+      out: 7 items: Denim Jacket — Light Wash, Cropped, High-Waisted Denim Shorts — Cutoff, Denim Vest — Medium Wash, Studded … +4 more
+      →    branch: not empty, selected_item = lst_007
+[3] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=10 items
+      out: Outfit One: Layer the Denim Jacket — Light Wash, Cropped right over your Black cropped zip hoodie, and pair th…
+[4] create_fit_card
+      in:  outfit (715 chars), new_item.id=lst_007
+      out: Scored this vintage Wrangler Denim Jacket on poshmark for only $42! Loving the streetwear vibe layered over a …
+  try 4: completed — fit card 164 chars
+[1] parse_query
+      in:  denim jacket under $50
+      out: description='denim jacket', size=None, max_price=50.0
+[2] search_listings (via MCP)
+      in:  description='denim jacket', size=None, max_price=50.0
+      out: 7 items: Denim Jacket — Light Wash, Cropped, High-Waisted Denim Shorts — Cutoff, Denim Vest — Medium Wash, Studded … +4 more
+      →    branch: not empty, selected_item = lst_007
+[3] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=10 items
+      out: Outfit One: Layer the Denim Jacket — Light Wash, Cropped over the White ribbed tank top, paired with the Baggy…
+[4] create_fit_card
+      in:  outfit (669 chars), new_item.id=lst_007
+      out: Scored this sweet Wrangler Denim Jacket on Poshmark for just $42! I'm styling it two ways: with baggy double-d…
+  try 5: completed — fit card 229 chars
+
+c4 fit card on lst_006  (example wardrobe)
+  query: bootleg tour graphic tee
+[1] parse_query
+      in:  bootleg tour graphic tee
+      out: description='bootleg tour graphic tee', size=None, max_price=None
+[2] search_listings (via MCP)
+      in:  description='bootleg tour graphic tee', size=None, max_price=None
+      out: 7 items: Graphic Tee — 2003 Tour Bootleg Style, Y2K Baby Tee — Butterfly Print, Vintage Band Tee — Faded Grey … +4 more
+      →    branch: not empty, selected_item = lst_006
+[3] suggest_outfit
+      in:  new_item.id=lst_006 (Graphic Tee — 2003 Tour Bootleg Style), wardrobe=10 items
+      out: Outfit 1: - Graphic Tee — 2003 Tour Bootleg Style - Baggy straight-leg jeans, dark wash - Vintage black denim …
+[4] create_fit_card
+      in:  outfit (670 chars), new_item.id=lst_006
+      out: Scored this sick 2003 tour bootleg Graphic Tee for just $24 on depop and I’m obsessed. Gives off the ultimate …
+  try 1: completed — fit card 226 chars
+[1] parse_query
+      in:  bootleg tour graphic tee
+      out: description='bootleg tour graphic tee', size=None, max_price=None
+[2] search_listings (via MCP)
+      in:  description='bootleg tour graphic tee', size=None, max_price=None
+      out: 7 items: Graphic Tee — 2003 Tour Bootleg Style, Y2K Baby Tee — Butterfly Print, Vintage Band Tee — Faded Grey … +4 more
+      →    branch: not empty, selected_item = lst_006
+[3] suggest_outfit
+      in:  new_item.id=lst_006 (Graphic Tee — 2003 Tour Bootleg Style), wardrobe=10 items
+      out: Outfit 1: - Graphic Tee — 2003 Tour Bootleg Style - Baggy straight-leg jeans, dark wash - Vintage black denim …
+[4] create_fit_card
+      in:  outfit (665 chars), new_item.id=lst_006
+      out: Scored this 2003 bootleg Graphic Tee for just $24 on depop and I’m obsessed. I'm styling it two ways: grunge w…
+  try 2: completed — fit card 219 chars
+[1] parse_query
+      in:  bootleg tour graphic tee
+      out: description='bootleg tour graphic tee', size=None, max_price=None
+[2] search_listings (via MCP)
+      in:  description='bootleg tour graphic tee', size=None, max_price=None
+      out: 7 items: Graphic Tee — 2003 Tour Bootleg Style, Y2K Baby Tee — Butterfly Print, Vintage Band Tee — Faded Grey … +4 more
+      →    branch: not empty, selected_item = lst_006
+[3] suggest_outfit
+      in:  new_item.id=lst_006 (Graphic Tee — 2003 Tour Bootleg Style), wardrobe=10 items
+      out: Outfit One: Wear the Graphic Tee — 2003 Tour Bootleg Style tucked into your baggy straight-leg jeans, dark was…
+  [rate limit] 15 requests used this minute. Waiting 27s. This is normal.
+[4] create_fit_card
+      in:  outfit (732 chars), new_item.id=lst_006
+      out: Scored this 2003 Tour Bootleg Style Graphic Tee on depop for just $24! Obsessed with styling it grunge with ba…
+  try 3: completed — fit card 214 chars
+[1] parse_query
+      in:  bootleg tour graphic tee
+      out: description='bootleg tour graphic tee', size=None, max_price=None
+[2] search_listings (via MCP)
+      in:  description='bootleg tour graphic tee', size=None, max_price=None
+      out: 7 items: Graphic Tee — 2003 Tour Bootleg Style, Y2K Baby Tee — Butterfly Print, Vintage Band Tee — Faded Grey … +4 more
+      →    branch: not empty, selected_item = lst_006
+[3] suggest_outfit
+      in:  new_item.id=lst_006 (Graphic Tee — 2003 Tour Bootleg Style), wardrobe=10 items
+      out: Outfit One: Wear the Graphic Tee — 2003 Tour Bootleg Style tucked into your baggy straight-leg jeans, dark was…
+  [rate limit] 15 requests used this minute. Waiting 11s. This is normal.
+[4] create_fit_card
+      in:  outfit (894 chars), new_item.id=lst_006
+      out: Scored this 2003 Tour Bootleg Style Graphic Tee for just $24 on depop! Styling it two ways: grungy with baggy …
+  try 4: completed — fit card 209 chars
+[1] parse_query
+      in:  bootleg tour graphic tee
+      out: description='bootleg tour graphic tee', size=None, max_price=None
+[2] search_listings (via MCP)
+      in:  description='bootleg tour graphic tee', size=None, max_price=None
+      out: 7 items: Graphic Tee — 2003 Tour Bootleg Style, Y2K Baby Tee — Butterfly Print, Vintage Band Tee — Faded Grey … +4 more
+      →    branch: not empty, selected_item = lst_006
+[3] suggest_outfit
+      in:  new_item.id=lst_006 (Graphic Tee — 2003 Tour Bootleg Style), wardrobe=10 items
+      out: Outfit 1: - Graphic Tee — 2003 Tour Bootleg Style - Baggy straight-leg jeans, dark wash - Vintage black denim …
+[4] create_fit_card
+      in:  outfit (603 chars), new_item.id=lst_006
+      out: Scored this sick 2003 tour bootleg Graphic Tee on depop for just $24! Obsessed with how it brings grunge energ…
+  try 5: completed — fit card 193 chars
+
+c5 q1 graphic tee L  (example wardrobe)
+  query: graphic tee size L under $30
+[1] parse_query
+      in:  graphic tee size L under $30
+      out: description='graphic tee', size='L', max_price=30.0
+[2] search_listings (via MCP)
+      in:  description='graphic tee', size='L', max_price=30.0
+      out: 3 items: Vintage Band Tee — Faded Grey, Graphic Tee — 2003 Tour Bootleg Style, Vintage Graphic Hoodie — Faded Black
+      →    branch: not empty, selected_item = lst_033
+[3] suggest_outfit
+      in:  new_item.id=lst_033 (Vintage Band Tee — Faded Grey), wardrobe=10 items
+      out: Outfit 1: Pair the Vintage Band Tee — Faded Grey with the Baggy straight-leg jeans, dark wash tucked in using …
+[4] create_fit_card
+      in:  outfit (748 chars), new_item.id=lst_033
+      out: Scored this Vintage Band Tee for just $19 and I'm obsessed with the faded wash! Styling it two ways on depop, …
+  try 1: completed — fit card 218 chars
+[1] parse_query
+      in:  graphic tee size L under $30
+      out: description='graphic tee', size='L', max_price=30.0
+[2] search_listings (via MCP)
+      in:  description='graphic tee', size='L', max_price=30.0
+      out: 3 items: Vintage Band Tee — Faded Grey, Graphic Tee — 2003 Tour Bootleg Style, Vintage Graphic Hoodie — Faded Black
+      →    branch: not empty, selected_item = lst_033
+[3] suggest_outfit
+      in:  new_item.id=lst_033 (Vintage Band Tee — Faded Grey), wardrobe=10 items
+      out: Outfit one: Pair the Vintage Band Tee — Faded Grey with the baggy straight-leg jeans, dark wash, tucked in sli…
+[4] create_fit_card
+      in:  outfit (798 chars), new_item.id=lst_033
+      out: Scored this faded Vintage Band Tee for just $19 on depop! Styling it two ways: grungy with combat boots and kh…
+  try 2: completed — fit card 203 chars
+[1] parse_query
+      in:  graphic tee size L under $30
+      out: description='graphic tee', size='L', max_price=30.0
+[2] search_listings (via MCP)
+      in:  description='graphic tee', size='L', max_price=30.0
+      out: 3 items: Vintage Band Tee — Faded Grey, Graphic Tee — 2003 Tour Bootleg Style, Vintage Graphic Hoodie — Faded Black
+      →    branch: not empty, selected_item = lst_033
+[3] suggest_outfit
+      in:  new_item.id=lst_033 (Vintage Band Tee — Faded Grey), wardrobe=10 items
+      out: Outfit 1: Pair the Vintage Band Tee — Faded Grey with the baggy straight-leg jeans, dark wash. Tuck the tee in…
+[4] create_fit_card
+      in:  outfit (895 chars), new_item.id=lst_033
+      out: Scored this Vintage Band Tee for just $19 on depop! It’s giving effortless 90s grunge with my baggy jeans and …
+  try 3: completed — fit card 198 chars
+[1] parse_query
+      in:  graphic tee size L under $30
+      out: description='graphic tee', size='L', max_price=30.0
+[2] search_listings (via MCP)
+      in:  description='graphic tee', size='L', max_price=30.0
+      out: 3 items: Vintage Band Tee — Faded Grey, Graphic Tee — 2003 Tour Bootleg Style, Vintage Graphic Hoodie — Faded Black
+      →    branch: not empty, selected_item = lst_033
+[3] suggest_outfit
+      in:  new_item.id=lst_033 (Vintage Band Tee — Faded Grey), wardrobe=10 items
+      out: Outfit 1: Pair the Vintage Band Tee — Faded Grey with the baggy straight-leg jeans, dark wash. Tuck the tee in…
+[4] create_fit_card
+      in:  outfit (791 chars), new_item.id=lst_033
+      out: Scored this Vintage Band Tee for just $19 on depop and I’m obsessed. Giving major grunge streetwear energy sty…
+  try 4: completed — fit card 213 chars
+[1] parse_query
+      in:  graphic tee size L under $30
+      out: description='graphic tee', size='L', max_price=30.0
+[2] search_listings (via MCP)
+      in:  description='graphic tee', size='L', max_price=30.0
+      out: 3 items: Vintage Band Tee — Faded Grey, Graphic Tee — 2003 Tour Bootleg Style, Vintage Graphic Hoodie — Faded Black
+      →    branch: not empty, selected_item = lst_033
+[3] suggest_outfit
+      in:  new_item.id=lst_033 (Vintage Band Tee — Faded Grey), wardrobe=10 items
+      out: Outfit 1: Pair the Vintage Band Tee — Faded Grey with the baggy straight-leg jeans, dark wash. Tuck the tee in…
+[4] create_fit_card
+      in:  outfit (734 chars), new_item.id=lst_033
+      out: Scored this Vintage Band Tee for just $19 on depop! Giving major 90s skater vibes tucked into baggy denim, or …
+  try 5: completed — fit card 188 chars
+
+c5 q2 top M  (example wardrobe)
+  query: top size M under $25
+[1] parse_query
+      in:  top size M under $25
+      out: description='top', size='M', max_price=25.0
+[2] search_listings (via MCP)
+      in:  description='top', size='M', max_price=25.0
+      out: 6 items: Mesh Long-Sleeve Top — Black, Crochet Halter Top — Cream, Henley Long Sleeve — Washed Burgundy … +3 more
+      →    branch: not empty, selected_item = lst_017
+  [rate limit] 15 requests used this minute. Waiting 26s. This is normal.
+[3] suggest_outfit
+      in:  new_item.id=lst_017 (Mesh Long-Sleeve Top — Black), wardrobe=10 items
+      out: Outfit One: Wear the Mesh Long-Sleeve Top — Black layered over your White ribbed tank top, paired with your Ba…
+  [rate limit] 15 requests used this minute. Waiting 3s. This is normal.
+[4] create_fit_card
+      in:  outfit (762 chars), new_item.id=lst_017
+      out: Scored this Mesh Long-Sleeve Top for just $15 on depop! In love with the 90s grunge vibe, whether I'm layering…
+  try 1: completed — fit card 184 chars
+[1] parse_query
+      in:  top size M under $25
+      out: description='top', size='M', max_price=25.0
+[2] search_listings (via MCP)
+      in:  description='top', size='M', max_price=25.0
+      out: 6 items: Mesh Long-Sleeve Top — Black, Crochet Halter Top — Cream, Henley Long Sleeve — Washed Burgundy … +3 more
+      →    branch: not empty, selected_item = lst_017
+  [rate limit] 15 requests used this minute. Waiting 11s. This is normal.
+[3] suggest_outfit
+      in:  new_item.id=lst_017 (Mesh Long-Sleeve Top — Black), wardrobe=10 items
+      out: Outfit 1: Layer the Mesh Long-Sleeve Top — Black directly over your White ribbed tank top, paired with your Ba…
+[4] create_fit_card
+      in:  outfit (762 chars), new_item.id=lst_017
+      out: Score! Snagged this Mesh Long-Sleeve Top for just $15 on depop. I'm layering it over a white tank with baggy d…
+  try 2: completed — fit card 182 chars
+[1] parse_query
+      in:  top size M under $25
+      out: description='top', size='M', max_price=25.0
+[2] search_listings (via MCP)
+      in:  description='top', size='M', max_price=25.0
+      out: 6 items: Mesh Long-Sleeve Top — Black, Crochet Halter Top — Cream, Henley Long Sleeve — Washed Burgundy … +3 more
+      →    branch: not empty, selected_item = lst_017
+[3] suggest_outfit
+      in:  new_item.id=lst_017 (Mesh Long-Sleeve Top — Black), wardrobe=10 items
+      out: Outfit 1: Layer the Mesh Long-Sleeve Top — Black directly over your White ribbed tank top, and pair them with …
+[4] create_fit_card
+      in:  outfit (828 chars), new_item.id=lst_017
+      out: Scored this Mesh Long-Sleeve Top for just $15 on depop and I'm obsessed! I've been styling it over a white tan…
+  try 3: completed — fit card 203 chars
+[1] parse_query
+      in:  top size M under $25
+      out: description='top', size='M', max_price=25.0
+[2] search_listings (via MCP)
+      in:  description='top', size='M', max_price=25.0
+      out: 6 items: Mesh Long-Sleeve Top — Black, Crochet Halter Top — Cream, Henley Long Sleeve — Washed Burgundy … +3 more
+      →    branch: not empty, selected_item = lst_017
+[3] suggest_outfit
+      in:  new_item.id=lst_017 (Mesh Long-Sleeve Top — Black), wardrobe=10 items
+      out: Outfit 1: Layer the Mesh Long-Sleeve Top — Black directly over your White ribbed tank top, paired with your Ba…
+[4] create_fit_card
+      in:  outfit (766 chars), new_item.id=lst_017
+      out: Scored this Mesh Long-Sleeve Top for just $15! Currently selling it on my depop, but I'm obsessed with styling…
+  try 4: completed — fit card 226 chars
+[1] parse_query
+      in:  top size M under $25
+      out: description='top', size='M', max_price=25.0
+[2] search_listings (via MCP)
+      in:  description='top', size='M', max_price=25.0
+      out: 6 items: Mesh Long-Sleeve Top — Black, Crochet Halter Top — Cream, Henley Long Sleeve — Washed Burgundy … +3 more
+      →    branch: not empty, selected_item = lst_017
+[3] suggest_outfit
+      in:  new_item.id=lst_017 (Mesh Long-Sleeve Top — Black), wardrobe=10 items
+      out: Outfit one: Wear the Mesh Long-Sleeve Top — Black layered over your White ribbed tank top, paired with your Ba…
+[4] create_fit_card
+      in:  outfit (671 chars), new_item.id=lst_017
+      out: Scored this Mesh Long-Sleeve Top for just $15 on depop and I'm obsessed! Gives major 90s grunge with baggy jea…
+  try 5: completed — fit card 197 chars
+
+c5 q3 bucket hat M  (example wardrobe)
+  query: bucket hat size M under $20
+[1] parse_query
+      in:  bucket hat size M under $20
+      out: description='bucket hat', size='M', max_price=20.0
+[2] search_listings (via MCP)
+      in:  description='bucket hat', size='M', max_price=20.0
+      out: 1 items: Bucket Hat — Reversible, Brown Plaid
+      →    branch: not empty, selected_item = lst_034
+[3] suggest_outfit
+      in:  new_item.id=lst_034 (Bucket Hat — Reversible, Brown Plaid), wardrobe=10 items
+      out: Outfit One  Bucket Hat — Reversible, Brown Plaid (worn plaid side out) White ribbed tank top Baggy straight-le…
+[4] create_fit_card
+      in:  outfit (665 chars), new_item.id=lst_034
+      out: Snagged this reversible Bucket Hat on thredUp for just $14! It easily switches between cozy 90s streetwear and…
+  try 1: completed — fit card 153 chars
+[1] parse_query
+      in:  bucket hat size M under $20
+      out: description='bucket hat', size='M', max_price=20.0
+[2] search_listings (via MCP)
+      in:  description='bucket hat', size='M', max_price=20.0
+      out: 1 items: Bucket Hat — Reversible, Brown Plaid
+      →    branch: not empty, selected_item = lst_034
+[3] suggest_outfit
+      in:  new_item.id=lst_034 (Bucket Hat — Reversible, Brown Plaid), wardrobe=10 items
+      out: Outfit 1: Bucket Hat — Reversible, Brown Plaid (worn with the plaid side showing) White ribbed tank top Baggy …
+[4] create_fit_card
+      in:  outfit (740 chars), new_item.id=lst_034
+      out: Scored this reversible Bucket Hat on thredUp for just $14 and I’m obsessed! Giving major 90s streetwear energy…
+  try 2: completed — fit card 220 chars
+[1] parse_query
+      in:  bucket hat size M under $20
+      out: description='bucket hat', size='M', max_price=20.0
+[2] search_listings (via MCP)
+      in:  description='bucket hat', size='M', max_price=20.0
+      out: 1 items: Bucket Hat — Reversible, Brown Plaid
+      →    branch: not empty, selected_item = lst_034
+[3] suggest_outfit
+      in:  new_item.id=lst_034 (Bucket Hat — Reversible, Brown Plaid), wardrobe=10 items
+      out: Outfit 1: Bucket Hat — Reversible, Brown Plaid Baggy straight-leg jeans, dark wash White ribbed tank top Vinta…
+  [rate limit] 15 requests used this minute. Waiting 26s. This is normal.
+[4] create_fit_card
+      in:  outfit (741 chars), new_item.id=lst_034
+      out: Scored this reversible Bucket Hat on thredUp for just $14! Here’s how I’m styling it for cozy streetwear and r…
+  try 3: completed — fit card 164 chars
+[1] parse_query
+      in:  bucket hat size M under $20
+      out: description='bucket hat', size='M', max_price=20.0
+[2] search_listings (via MCP)
+      in:  description='bucket hat', size='M', max_price=20.0
+      out: 1 items: Bucket Hat — Reversible, Brown Plaid
+      →    branch: not empty, selected_item = lst_034
+  [rate limit] 15 requests used this minute. Waiting 3s. This is normal.
+[3] suggest_outfit
+      in:  new_item.id=lst_034 (Bucket Hat — Reversible, Brown Plaid), wardrobe=10 items
+      out: Outfit One Bucket Hat — Reversible, Brown Plaid White ribbed tank top Baggy straight-leg jeans, dark wash Brow…
+  [rate limit] 15 requests used this minute. Waiting 11s. This is normal.
+[4] create_fit_card
+      in:  outfit (620 chars), new_item.id=lst_034
+      out: Scored this reversible Bucket Hat on thredUp for just $14! Going for 90s streetwear with a fitted tank and bag…
+  try 4: completed — fit card 231 chars
+[1] parse_query
+      in:  bucket hat size M under $20
+      out: description='bucket hat', size='M', max_price=20.0
+[2] search_listings (via MCP)
+      in:  description='bucket hat', size='M', max_price=20.0
+      out: 1 items: Bucket Hat — Reversible, Brown Plaid
+      →    branch: not empty, selected_item = lst_034
+[3] suggest_outfit
+      in:  new_item.id=lst_034 (Bucket Hat — Reversible, Brown Plaid), wardrobe=10 items
+      out: Outfit One:  Bucket Hat — Reversible, Brown Plaid worn plaid-side out, paired with the White ribbed tank top t…
+[4] create_fit_card
+      in:  outfit (790 chars), new_item.id=lst_034
+      out: Scored this reversible Bucket Hat on thredUp for just $14! So obsessed with styling it today: first as a 90s e…
+  try 5: completed — fit card 256 chars
+
+c5 q4 sneakers 8  (example wardrobe)
+  query: sneakers size 8 under $50
+[1] parse_query
+      in:  sneakers size 8 under $50
+      out: description='sneakers', size='8', max_price=50.0
+[2] search_listings (via MCP)
+      in:  description='sneakers', size='8', max_price=50.0
+      out: 1 items: Platform Sneakers — White Chunky Sole
+      →    branch: not empty, selected_item = lst_019
+[3] suggest_outfit
+      in:  new_item.id=lst_019 (Platform Sneakers — White Chunky Sole), wardrobe=10 items
+      out: Outfit 1: Platform Sneakers — White Chunky Sole White ribbed tank top Baggy straight-leg jeans, dark wash Blac…
+[4] create_fit_card
+      in:  outfit (581 chars), new_item.id=lst_019
+      out: Scored these Platform Sneakers on Poshmark for just $48! Obsessed with styling them for both Y2K streetwear an…
+  try 1: completed — fit card 160 chars
+[1] parse_query
+      in:  sneakers size 8 under $50
+      out: description='sneakers', size='8', max_price=50.0
+[2] search_listings (via MCP)
+      in:  description='sneakers', size='8', max_price=50.0
+      out: 1 items: Platform Sneakers — White Chunky Sole
+      →    branch: not empty, selected_item = lst_019
+[3] suggest_outfit
+      in:  new_item.id=lst_019 (Platform Sneakers — White Chunky Sole), wardrobe=10 items
+      out: Outfit one: Pair your new Platform Sneakers — White Chunky Sole with the white ribbed tank top tucked into you…
+[4] create_fit_card
+      in:  outfit (727 chars), new_item.id=lst_019
+      out: Scored these Platform Sneakers for just $48 on Poshmark! Total Y2K streetwear vibes whether I’m pairing them w…
+  try 2: completed — fit card 144 chars
+[1] parse_query
+      in:  sneakers size 8 under $50
+      out: description='sneakers', size='8', max_price=50.0
+[2] search_listings (via MCP)
+      in:  description='sneakers', size='8', max_price=50.0
+      out: 1 items: Platform Sneakers — White Chunky Sole
+      →    branch: not empty, selected_item = lst_019
+[3] suggest_outfit
+      in:  new_item.id=lst_019 (Platform Sneakers — White Chunky Sole), wardrobe=10 items
+      out: Outfit 1: Platform Sneakers — White Chunky Sole, Black cropped zip hoodie, Baggy straight-leg jeans, dark wash…
+[4] create_fit_card
+      in:  outfit (576 chars), new_item.id=lst_019
+      out: Scored these Platform Sneakers for just $48 on poshmark and I'm obsessed! Styling them with a cropped hoodie a…
+  try 3: completed — fit card 211 chars
+[1] parse_query
+      in:  sneakers size 8 under $50
+      out: description='sneakers', size='8', max_price=50.0
+[2] search_listings (via MCP)
+      in:  description='sneakers', size='8', max_price=50.0
+      out: 1 items: Platform Sneakers — White Chunky Sole
+      →    branch: not empty, selected_item = lst_019
+[3] suggest_outfit
+      in:  new_item.id=lst_019 (Platform Sneakers — White Chunky Sole), wardrobe=10 items
+      out: Outfit One Platform Sneakers — White Chunky Sole White ribbed tank top Baggy straight-leg jeans, dark wash Vin…
+[4] create_fit_card
+      in:  outfit (642 chars), new_item.id=lst_019
+      out: Scored these Platform Sneakers on poshmark for just $48! Obsessed with styling them for effortless Y2K streetw…
+  try 4: completed — fit card 143 chars
+[1] parse_query
+      in:  sneakers size 8 under $50
+      out: description='sneakers', size='8', max_price=50.0
+[2] search_listings (via MCP)
+      in:  description='sneakers', size='8', max_price=50.0
+      out: 1 items: Platform Sneakers — White Chunky Sole
+      →    branch: not empty, selected_item = lst_019
+[3] suggest_outfit
+      in:  new_item.id=lst_019 (Platform Sneakers — White Chunky Sole), wardrobe=10 items
+      out: Outfit 1: Platform Sneakers — White Chunky Sole White ribbed tank top Black cropped zip hoodie Baggy straight-…
+[4] create_fit_card
+      in:  outfit (563 chars), new_item.id=lst_019
+      out: Scored these Platform Sneakers on poshmark for just $48! Obsessed with how the chunky white soles tie together…
+  try 5: completed — fit card 198 chars
+
+c5 q5 jacket S  (example wardrobe)
+  query: jacket size S under $45
+[1] parse_query
+      in:  jacket size S under $45
+      out: description='jacket', size='S', max_price=45.0
+[2] search_listings (via MCP)
+      in:  description='jacket', size='S', max_price=45.0
+      out: 1 items: Denim Jacket — Light Wash, Cropped
+      →    branch: not empty, selected_item = lst_007
+  [rate limit] 15 requests used this minute. Waiting 25s. This is normal.
+[3] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=10 items
+      out: Outfit One Wear the Denim Jacket — Light Wash, Cropped over the White ribbed tank top tucked into the Baggy st…
+  [rate limit] 15 requests used this minute. Waiting 4s. This is normal.
+[4] create_fit_card
+      in:  outfit (684 chars), new_item.id=lst_007
+      out: Scored this sweet Wrangler Denim Jacket on Poshmark for just $42! Loving the indie-sleaze grunge vibe for both…
+  try 1: completed — fit card 148 chars
+[1] parse_query
+      in:  jacket size S under $45
+      out: description='jacket', size='S', max_price=45.0
+[2] search_listings (via MCP)
+      in:  description='jacket', size='S', max_price=45.0
+      out: 1 items: Denim Jacket — Light Wash, Cropped
+      →    branch: not empty, selected_item = lst_007
+  [rate limit] 15 requests used this minute. Waiting 11s. This is normal.
+[3] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=10 items
+      out: Outfit One: Wear the Denim Jacket — Light Wash, Cropped over the White ribbed tank top tucked into the Wide-le…
+[4] create_fit_card
+      in:  outfit (722 chars), new_item.id=lst_007
+      out: Scored this vintage Wrangler Denim Jacket on poshmark for just $42! Love styling the cropped light wash with b…
+  try 2: completed — fit card 203 chars
+[1] parse_query
+      in:  jacket size S under $45
+      out: description='jacket', size='S', max_price=45.0
+[2] search_listings (via MCP)
+      in:  description='jacket', size='S', max_price=45.0
+      out: 1 items: Denim Jacket — Light Wash, Cropped
+      →    branch: not empty, selected_item = lst_007
+[3] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=10 items
+      out: Outfit one: Pair the Denim Jacket — Light Wash, Cropped with your white ribbed tank top tucked into the baggy …
+[4] create_fit_card
+      in:  outfit (705 chars), new_item.id=lst_007
+      out: Scored this Wrangler Denim Jacket on poshmark for only $42! Loving the vintage grunge vibe. Styling it today w…
+  try 3: completed — fit card 189 chars
+[1] parse_query
+      in:  jacket size S under $45
+      out: description='jacket', size='S', max_price=45.0
+[2] search_listings (via MCP)
+      in:  description='jacket', size='S', max_price=45.0
+      out: 1 items: Denim Jacket — Light Wash, Cropped
+      →    branch: not empty, selected_item = lst_007
+[3] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=10 items
+      out: Outfit 1 White ribbed tank top tucked into Baggy straight-leg jeans, dark wash, layered with the Denim Jacket …
+[4] create_fit_card
+      in:  outfit (612 chars), new_item.id=lst_007
+      out: Scored this vintage Wrangler Denim Jacket on Poshmark for just $42! It’s giving effortless 90s off-duty model …
+  try 4: completed — fit card 178 chars
+[1] parse_query
+      in:  jacket size S under $45
+      out: description='jacket', size='S', max_price=45.0
+[2] search_listings (via MCP)
+      in:  description='jacket', size='S', max_price=45.0
+      out: 1 items: Denim Jacket — Light Wash, Cropped
+      →    branch: not empty, selected_item = lst_007
+[3] suggest_outfit
+      in:  new_item.id=lst_007 (Denim Jacket — Light Wash, Cropped), wardrobe=10 items
+      out: Outfit One: Wear the Denim Jacket — Light Wash, Cropped over the White ribbed tank top tucked into the Baggy s…
+[4] create_fit_card
+      in:  outfit (702 chars), new_item.id=lst_007
+      out: Scored this vintage Wrangler Denim Jacket on Poshmark for just $42! Loving the grunge-meets-casual vibe for ef…
+  try 5: completed — fit card 136 chars
+
+Wrote results\run_2026-10-13_1440_after.md
+130 model calls this session, 45780 prompt + 12652 output tokens
+
+Commit this file. It's the evidence the test actually happened.
